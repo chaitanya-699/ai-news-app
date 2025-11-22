@@ -1,4 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -9,11 +10,10 @@ import Animated, {
 import Bg from "../assets/images/bg.jpg";
 import Logo from "../assets/images/logo.jpg";
 
-
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 const Card = () => {
   const scale = useSharedValue(1);
-
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
@@ -21,11 +21,14 @@ const Card = () => {
   });
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.990, { damping: 45 });
+    scale.value = withSpring(0.99, { damping: 45 });
   };
 
   const handlePressOut = () => {
     scale.value = withSpring(1, { damping: 45 });
+  };
+
+  const callAI = () => {
   };
 
   return (
@@ -34,7 +37,7 @@ const Card = () => {
       className="flex flex-col w-[95%] h-full border-[1px] border-white rounded-[7px] bg-blue-400"
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      onPress={() => console.log("Pressed")}
+      onPress={() => router.push("/screens/aichat" )}
     >
       <View className="flex-1 justify-start items-center bg-inherit">
         <Image source={Bg} className="w-[96%] h-[50%] mt-2 rounded-[7px]" />

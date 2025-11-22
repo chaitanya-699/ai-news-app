@@ -4,7 +4,8 @@ import { ImageBackground } from "expo-image";
 import BG from "../../assets/images/bg.jpg";
 const Personlize = () => {
   return (
-    <ImageBackground source={BG} style={styles.container}></ImageBackground>
+    <ImageBackground source={BG} style={styles.container}>
+    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({

@@ -1,13 +1,15 @@
 import HomeTabs from "@/components/HomeTabs";
+import { memo } from "react";
 import { ImageBackground, StatusBar, StyleSheet } from "react-native";
 import BG from "../../assets/images/bg.jpg";
-import { memo } from "react";
 const Home: React.FC = memo(() => {
   return (
-    <ImageBackground source={BG} style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <HomeTabs/>
-    </ImageBackground>
+    <>
+      <ImageBackground source={BG} style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <HomeTabs />
+      </ImageBackground>
+    </>
   );
 });
 

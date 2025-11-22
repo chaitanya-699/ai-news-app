@@ -1,17 +1,15 @@
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React, { useEffect, memo, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { memo, useEffect } from "react";
+import { StyleSheet } from "react-native";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withDelay,
   interpolate,
+  useAnimatedStyle,
+  useSharedValue,
   withSpring,
 } from "react-native-reanimated";
 
-// Separate memoized component for better performance
+// === ICON COMPONENT ===
 interface TabBarIconProps {
   focused: boolean;
   name: string;
@@ -37,47 +35,33 @@ const TabBarIcon = memo<TabBarIconProps>(
       });
     }, [focused]);
 
-    const animatedContainerStyle = useAnimatedStyle(() => {
+    const containerStyle = useAnimatedStyle(() => {
       const scale = interpolate(animationProgress.value, [0, 1], [0.8, 1]);
-
-      return {
-        transform: [{ scale }],
-      };
+      return { transform: [{ scale }] };
     });
 
-    const animatedBackgroundStyle = useAnimatedStyle(() => {
+    const bgStyle = useAnimatedStyle(() => {
       const opacity = interpolate(animationProgress.value, [0, 1], [0, 1]);
       const scale = interpolate(animationProgress.value, [0, 1], [0.7, 1]);
-
       return {
         opacity,
         transform: [{ scale }],
       };
     });
 
-    const animatedIconStyle = useAnimatedStyle(() => {
-      const iconScale = interpolate(
-        animationProgress.value,
-        [0, 1],
-        [0.72, 1] // 18/25 = 0.72
-      );
-
+    const iconStyle = useAnimatedStyle(() => {
+      const scale = interpolate(animationProgress.value, [0, 1], [0.72, 1]);
       return {
-        transform: [{ scale: iconScale }],
+        transform: [{ scale }],
       };
     });
 
     return (
-      <Animated.View style={[styles.container, animatedContainerStyle]}>
+      <Animated.View style={[styles.container, containerStyle]}>
         <Animated.View
-          style={[
-            styles.background,
-            { backgroundColor },
-            animatedBackgroundStyle,
-          ]}
+          style={[styles.background, { backgroundColor }, bgStyle]}
         />
-
-        <Animated.View style={animatedIconStyle}>
+        <Animated.View style={iconStyle}>
           <FontAwesome5
             name={name}
             size={25}
@@ -88,7 +72,6 @@ const TabBarIcon = memo<TabBarIconProps>(
     );
   }
 );
-
 
 const _layout = () => {
   return (
@@ -101,7 +84,9 @@ const _layout = () => {
           backgroundColor: "transparent",
         },
         tabBarShowLabel: false,
-        tabBarStyle: {
+        // 🔥 DYNAMIC TAB BAR VISIBILITY HERE
+        tabBarStyle:
+         {
           width: "100%",
           position: "absolute",
           bottom: 0,
@@ -111,13 +96,6 @@ const _layout = () => {
           paddingVertical: 0,
           elevation: 0,
           borderTopWidth: 0,
-        },
-        tabBarItemStyle: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 25,
-          marginHorizontal: 5,
         },
       }}
     >
@@ -165,8 +143,9 @@ const _layout = () => {
   );
 };
 
-TabBarIcon.displayName = "TabBarIcon";
+export default _layout;
 
+// === STYLES ===
 const styles = StyleSheet.create({
   container: {
     width: 50,
@@ -182,5 +161,3 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
 });
-
-export default _layout;
