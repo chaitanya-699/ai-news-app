@@ -22,9 +22,9 @@ const TabBarIcon = memo<TabBarIconProps>(
   ({
     focused,
     name,
-    activeColor = "#234C6A",
+    activeColor = "#4fc3f7",
     inactiveColor = "white",
-    backgroundColor = "#D2C1B6",
+    backgroundColor = "#28282b",
   }) => {
     const animationProgress = useSharedValue(0);
 
@@ -64,7 +64,7 @@ const TabBarIcon = memo<TabBarIconProps>(
         <Animated.View style={iconStyle}>
           <FontAwesome5
             name={name}
-            size={25}
+            size={22}
             color={focused ? activeColor : inactiveColor}
           />
         </Animated.View>
@@ -91,7 +91,7 @@ const _layout = () => {
           position: "absolute",
           bottom: 0,
           height: 55,
-          backgroundColor: "rgba(35, 76, 106, 0.5)",
+          backgroundColor: "rgba(40,40,43,0.5)",
           paddingHorizontal: 0,
           paddingVertical: 0,
           elevation: 0,

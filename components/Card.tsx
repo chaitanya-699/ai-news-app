@@ -1,7 +1,15 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import LottieView from "lottie-react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -28,8 +36,8 @@ const Card = () => {
     scale.value = withSpring(1, { damping: 45 });
   };
 
-  const callAI = () => {
-  };
+  const callAI = () => {};
+  const [bookmark, setBookmark] = useState<string>("");
 
   return (
     <AnimatedPressable
@@ -37,9 +45,11 @@ const Card = () => {
       className="flex flex-col w-[95%] h-full border-[1px] border-white rounded-[7px] bg-blue-400"
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      onPress={() => router.push("/screens/aichat" )}
     >
-      <View className="flex-1 justify-start items-center bg-inherit">
+      <Pressable
+        className="flex-1 justify-start items-center bg-inherit"
+        onPress={() => router.push("/screens/aichat")}
+      >
         <Image source={Bg} className="w-[96%] h-[50%] mt-2 rounded-[7px]" />
         <View className=" w-full max-h-[120px] p-1">
           <Text className="text-4xl font-bold text-white py-2 px-1">
@@ -58,7 +68,7 @@ const Card = () => {
             quis.
           </Text>
         </View>
-      </View>
+      </Pressable>
       <View className="flex flex-row justify-between items-center  mb-3 px-3">
         <View className="flex flex-row justify-between items-center gap-2 py-[3px] pr-[12px] bg-[#1a1f35] border border-[#4fc3f7] rounded-[12px] pl-2">
           <Image
@@ -70,27 +80,64 @@ const Card = () => {
           </Text>
         </View>
         <View className="flex flex-row justify-center items-center gap-6">
-          <FontAwesome5
-            name="bookmark"
-            size={18}
-            color="#4fc3f7"
-            solid={false}
-            className=" px-3 py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
-          />
-          <FontAwesome5
-            name="comment"
-            size={18}
-            color="#4fc3f7"
-            solid={false}
-            className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
-          />
-          <FontAwesome5
-            name="headphones"
-            size={18}
-            color="#4fc3f7"
-            solid={false}
-            className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
-          />
+          <TouchableOpacity
+            onPress={() => {
+              if (bookmark === "success") {
+                setBookmark("");
+                return;
+              }
+
+              setBookmark("loading");
+              console.log("calling api");
+              setTimeout(() => {
+                setBookmark("success");
+              }, 3000);
+            }}
+          >
+            {bookmark === "loading" ? (
+              <LottieView
+                source={require("../assets/animations/star-loading.json")}
+                autoPlay
+                loop
+                style={{ width: 28, height: 28 }}
+              />
+            ) : bookmark === "success" ? (
+              <FontAwesome5
+                name="bookmark"
+                size={18}
+                color="#4fc3f7"
+                solid={true}
+                className="px-3 py-[8px] bg-[#1a1f35] border border-[#4fc3f7] rounded-full self-center"
+              />
+            ) : (
+              <FontAwesome5
+                name="bookmark"
+                size={18}
+                color="#4fc3f7"
+                solid={false}
+                className="px-3 py-[8px] bg-[#1a1f35] border border-[#4fc3f7] rounded-full self-center"
+              />
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <FontAwesome5
+              name="comment"
+              size={18}
+              color="#4fc3f7"
+              solid={false}
+              className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <FontAwesome5
+              name="headphones"
+              size={18}
+              color="#4fc3f7"
+              solid={false}
+              className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </AnimatedPressable>
