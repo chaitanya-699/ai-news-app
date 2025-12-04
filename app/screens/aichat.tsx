@@ -1,5 +1,6 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -10,8 +11,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import Bg from "../../assets/images/bg.jpg";
+} from 'react-native';
+import Bg from '../../assets/images/bg.jpg';
 
 interface Message {
   id: string;
@@ -21,6 +22,8 @@ interface Message {
 }
 
 const aichat = () => {
+  const { color } = useLocalSearchParams();
+  const bg = Array.isArray(color) ? color[0] : color;
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -32,7 +35,7 @@ const aichat = () => {
   ).current;
 
   const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -59,7 +62,7 @@ const aichat = () => {
     // Stagger header buttons
     Animated.stagger(
       80,
-      headerButtonsAnim.map((anim) =>
+      headerButtonsAnim.map(anim =>
         Animated.spring(anim, {
           toValue: 1,
           useNativeDriver: true,
@@ -73,7 +76,7 @@ const aichat = () => {
     setTimeout(() => {
       Animated.stagger(
         100,
-        suggestionChipsAnim.map((anim) =>
+        suggestionChipsAnim.map(anim =>
           Animated.spring(anim, {
             toValue: 1,
             useNativeDriver: true,
@@ -86,11 +89,11 @@ const aichat = () => {
   }, []);
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);
     });
 
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardVisible(false);
     });
 
@@ -209,13 +212,13 @@ const aichat = () => {
     // Simulate AI thinking time
     setTimeout(() => {
       const aiResponse: Message = {
-        id: Date.now().toString() + "_ai",
+        id: Date.now().toString() + '_ai',
         text: `I received your message: "${userMessage}". This is a simulated AI response. In a real implementation, this would connect to an AI API.`,
         isUser: false,
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, aiResponse]);
+      setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
 
       setTimeout(() => {
@@ -234,8 +237,8 @@ const aichat = () => {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
-    setMessage("");
+    setMessages(prev => [...prev, userMessage]);
+    setMessage('');
 
     setTimeout(() => {
       scrollRef.current?.scrollToEnd({ animated: true });
@@ -255,12 +258,12 @@ const aichat = () => {
 
   const handleShare = () => {
     // Implement share functionality
-    console.log("Share pressed");
+    console.log('Share pressed');
   };
 
   const handleBack = () => {
     // Implement navigation back
-    console.log("Back pressed");
+    console.log('Back pressed');
   };
 
   const toggleExpanded = () => {
@@ -268,206 +271,209 @@ const aichat = () => {
   };
 
   const suggestions = [
-    "What is your name?",
-    "How can you help me?",
-    "Tell me something interesting",
+    'What is your name?',
+    'How can you help me?',
+    'Tell me something interesting',
   ];
+  console.log('bg color:', bg);
 
   return (
-    <View className="flex-1 w-full bg-[#28282b]">
-      {/* Fixed Background Image */}
-      <Image
-        source={Bg}
-        className="absolute top-1 left-1 w-[98%] h-[350px] rounded-3xl border-[0.5px] border-[#afafa76e]"
-      />
+    <View className="flex-1 bg-black">
+      <View style={{ backgroundColor: bg }} className="flex-1 w-full">
+        {/* Fixed Background Image */}
+        <Image
+          source={Bg}
+          className="absolute top-1 left-1 w-[98%] h-[350px] rounded-3xl border-[0.5px] border-[#afafa76e]"
+        />
 
-      <View className="absolute bottom-0 w-full h-auto bg-transparent z-10 items-center justify-center">
-        <View className="flex-1 w-full p-2 bg-[#28282b] rounded-3xl">
-          <TextInput
-            className="flex-1 w-[85%] min-h-[55px] bg-[#28282b] text-[17px] font-light text-white px-5 py-1 rounded-3xl border-[0.5px] border-[#afafa76e]"
-            placeholder="ask ai"
-            placeholderTextColor="white"
-            keyboardType="default"
-            multiline
-            autoCorrect={true}
-            autoCapitalize="none"
-            numberOfLines={4}
-            value={message}
-            onChangeText={setMessage}
-            onSubmitEditing={sendMessage}
-          />
-          <TouchableOpacity
-            className="absolute right-2 top-[10px] bg-[#28282b] p-4 rounded-full border-[0.5px] border-[#afafa76e]"
-            onPress={sendMessage}
-            disabled={!message.trim()}
-          >
-            <FontAwesome5
-              name="paper-plane"
-              color={message.trim() ? "white" : "#666"}
-              size={22}
+        <View className="absolute bottom-0 w-full h-auto bg-transparent z-10 items-center justify-center">
+          <View className="flex-1 w-full p-2 rounded-3xl">
+            <TextInput
+              className="flex-1 w-[85%] min-h-[55px] bg-[#28282b] text-[17px] font-light text-white px-5 py-1 rounded-3xl border-[0.5px] border-[#afafa76e]"
+              placeholder="ask ai"
+              placeholderTextColor="white"
+              keyboardType="default"
+              multiline
+              autoCorrect={true}
+              autoCapitalize="none"
+              numberOfLines={4}
+              value={message}
+              onChangeText={setMessage}
+              onSubmitEditing={sendMessage}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              className="absolute right-2 top-[10px] bg-[#28282b] p-4 rounded-full border-[0.5px] border-[#afafa76e]"
+              onPress={sendMessage}
+              disabled={!message.trim()}
+            >
+              <FontAwesome5
+                name="paper-plane"
+                color={message.trim() ? 'white' : '#666'}
+                size={22}
+              />
+            </TouchableOpacity>
+          </View>
+          {keyboardVisible ? <View className="h-[298px]" /> : null}
         </View>
-        {keyboardVisible ? <View className="h-[298px]" /> : null}
-      </View>
 
-      {/* Fixed Header */}
-      <View className="absolute top-0 w-full h-24 flex-row justify-between items-end bg-transparent z-20">
-        <AnimatedButton index={0} onPress={handleBack}>
-          <FontAwesome5
-            name="arrow-left"
-            color="white"
-            size={20}
-            className="px-[9px] py-2 bg-[#000000aa] rounded-full ml-3"
-          />
-        </AnimatedButton>
-
-        <View className="flex flex-row items-center justify-center gap-3 mr-3">
-          <AnimatedButton index={1} onPress={toggleBookmark}>
+        {/* Fixed Header */}
+        <View className="absolute top-0 w-full h-24 flex-row justify-between items-end bg-transparent z-20">
+          <AnimatedButton index={0} onPress={handleBack}>
             <FontAwesome5
-              name="bookmark"
-              solid={isBookmarked}
+              name="arrow-left"
               color="white"
               size={20}
-              className="px-3 py-[8px] bg-[#000000aa] rounded-full self-center"
+              className="px-[9px] py-2 bg-[#000000aa] rounded-full ml-3"
             />
           </AnimatedButton>
 
-          <AnimatedButton index={2}>
-            <FontAwesome5
-              name="headphones-alt"
-              solid={false}
-              color="white"
-              size={20}
-              className="px-[8px] py-[8px] bg-[#000000aa] rounded-full self-center"
-            />
-          </AnimatedButton>
+          <View className="flex flex-row items-center justify-center gap-3 mr-3">
+            <AnimatedButton index={1} onPress={toggleBookmark}>
+              <FontAwesome5
+                name="bookmark"
+                solid={isBookmarked}
+                color="white"
+                size={20}
+                className="px-3 py-[8px] bg-[#000000aa] rounded-full self-center"
+              />
+            </AnimatedButton>
 
-          <AnimatedButton index={3} onPress={handleShare}>
-            <FontAwesome5
-              name="share-alt"
-              solid={false}
-              color="white"
-              size={20}
-              className="px-[9px] py-2 rounded-full bg-[#000000aa]"
-            />
-          </AnimatedButton>
+            <AnimatedButton index={2}>
+              <FontAwesome5
+                name="headphones-alt"
+                solid={false}
+                color="white"
+                size={20}
+                className="px-[8px] py-[8px] bg-[#000000aa] rounded-full self-center"
+              />
+            </AnimatedButton>
 
-          <AnimatedButton index={4}>
-            <FontAwesome5
-              name="ellipsis-v"
-              solid={false}
-              color="white"
-              size={20}
-              className="px-4 py-2 bg-[#000000aa] rounded-full"
-            />
-          </AnimatedButton>
+            <AnimatedButton index={3} onPress={handleShare}>
+              <FontAwesome5
+                name="share-alt"
+                solid={false}
+                color="white"
+                size={20}
+                className="px-[9px] py-2 rounded-full bg-[#000000aa]"
+              />
+            </AnimatedButton>
+
+            <AnimatedButton index={4}>
+              <FontAwesome5
+                name="ellipsis-v"
+                solid={false}
+                color="white"
+                size={20}
+                className="px-4 py-2 bg-[#000000aa] rounded-full"
+              />
+            </AnimatedButton>
+          </View>
         </View>
-      </View>
 
-      {/* Scrollable Body */}
-      <ScrollView
-        ref={scrollRef}
-        className="flex-1 w-full"
-        contentContainerStyle={{
-          paddingTop: 354,
-        }}
-      >
-        <Animated.View
-          className="bg-[#28282b] px-3 pt-4"
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
+        {/* Scrollable Body */}
+        <ScrollView
+          ref={scrollRef}
+          className="flex-1 w-full"
+          contentContainerStyle={{
+            paddingTop: 354,
           }}
         >
-          <Text className="text-[33px] font-normal text-white mb-1 leading-tight">
-            Lorem ipsum dolor sit jasj jha, amet consectetur adipisicing elit.
-          </Text>
-
-          <Text
-            className="text-[17px] font-light text-white my-2"
-            numberOfLines={isExpanded ? undefined : 6}
+          <Animated.View
+            className="bg-inherit px-3 pt-4"
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            }}
           >
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto
-            quasi reprehenderit omnis. Molestias atque autem a quo? Maxime
-            fugiat eveniet, saepe praesentium corrupti laborum, accusantium
-            consequuntur blanditiis id error accusamus. Magni saepe optio
-            numquam quidem exercitationem quia quam quis repellat eaque
-            dignissimos. Culpa eos mollitia a perspiciatis corporis quam omnis
-            magni doloribus magnam praesentium corrupti laborum, accusantium
-            {!isExpanded && " . . ."}
-          </Text>
-
-          <TouchableOpacity onPress={toggleExpanded} className="mb-2">
-            <Text className="text-[15px] font-normal text-white/70">
-              {isExpanded ? "Show less" : "Read more"}
+            <Text className="text-[33px] font-normal text-white mb-1 leading-tight">
+              Lorem ipsum dolor sit jasj jha, amet consectetur adipisicing elit.
             </Text>
-          </TouchableOpacity>
 
-          {messages.length === 0 && (
-            <ScrollView
-              horizontal={true}
-              className="flex flex-row mb-4"
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+            <Text
+              className="text-[17px] font-light text-white my-2"
+              numberOfLines={isExpanded ? undefined : 6}
             >
-              {suggestions.map((suggestion, index) => (
-                <SuggestionChip
-                  key={index}
-                  text={suggestion}
-                  index={index}
-                  onPress={() => handleSuggestionPress(suggestion)}
-                />
-              ))}
-            </ScrollView>
-          )}
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto
+              quasi reprehenderit omnis. Molestias atque autem a quo? Maxime
+              fugiat eveniet, saepe praesentium corrupti laborum, accusantium
+              consequuntur blanditiis id error accusamus. Magni saepe optio
+              numquam quidem exercitationem quia quam quis repellat eaque
+              dignissimos. Culpa eos mollitia a perspiciatis corporis quam omnis
+              magni doloribus magnam praesentium corrupti laborum, accusantium
+              {!isExpanded && ' . . .'}
+            </Text>
 
-          {/* Chat Messages */}
-          <View className="flex flex-col gap-3 mt-4">
-            {messages.map((msg) => (
-              <View
-                key={msg.id}
-                className={`flex flex-row ${
-                  msg.isUser ? "justify-end" : "justify-start"
-                }`}
+            <TouchableOpacity onPress={toggleExpanded} className="mb-2">
+              <Text className="text-[15px] font-normal text-white/70">
+                {isExpanded ? 'Show less' : 'Read more'}
+              </Text>
+            </TouchableOpacity>
+
+            {messages.length === 0 && (
+              <ScrollView
+                horizontal={true}
+                className="flex flex-row mb-4"
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               >
+                {suggestions.map((suggestion, index) => (
+                  <SuggestionChip
+                    key={index}
+                    text={suggestion}
+                    index={index}
+                    onPress={() => handleSuggestionPress(suggestion)}
+                  />
+                ))}
+              </ScrollView>
+            )}
+
+            {/* Chat Messages */}
+            <View className="flex flex-col gap-3 mt-4">
+              {messages.map(msg => (
                 <View
-                  className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                    msg.isUser
-                      ? "bg-white/10 border-[0.5px] border-[#afafa76e]"
-                      : "bg-white/5 border-[0.5px] border-[#afafa76e]"
+                  key={msg.id}
+                  className={`flex flex-row ${
+                    msg.isUser ? 'justify-end' : 'justify-start'
                   }`}
                 >
-                  <Text className="text-[16px] text-white font-normal">
-                    {msg.text}
-                  </Text>
+                  <View
+                    className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+                      msg.isUser
+                        ? 'bg-white/10 border-[0.5px] border-[#afafa76e]'
+                        : 'bg-white/5 border-[0.5px] border-[#afafa76e]'
+                    }`}
+                  >
+                    <Text className="text-[16px] text-white font-normal">
+                      {msg.text}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
 
-            {/* Typing Indicator */}
-            {isTyping && (
-              <View className="flex flex-row justify-start">
-                <View className="bg-white/5 border-[0.5px] border-[#afafa76e] px-4 py-3 rounded-2xl">
-                  <Text className="text-[16px] text-white/70">
-                    AI is typing...
-                  </Text>
+              {/* Typing Indicator */}
+              {isTyping && (
+                <View className="flex flex-row justify-start">
+                  <View className="bg-white/5 border-[0.5px] border-[#afafa76e] px-4 py-3 rounded-2xl">
+                    <Text className="text-[16px] text-white/70">
+                      AI is typing...
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              )}
+            </View>
+
+            {keyboardVisible ? (
+              <View className="w-full h-14" />
+            ) : (
+              <View className="w-full h-24" />
             )}
-          </View>
-
-          {keyboardVisible ? (
-            <View className="w-full h-14" />
-          ) : (
-            <View className="w-full h-24" />
-          )}
-        </Animated.View>
-      </ScrollView>
-      {keyboardVisible ? <View className="h-[320px]" /> : null}
+          </Animated.View>
+        </ScrollView>
+        {keyboardVisible ? <View className="h-[320px]" /> : null}
+      </View>
     </View>
   );
 };

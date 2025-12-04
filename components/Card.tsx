@@ -1,7 +1,7 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import { router } from "expo-router";
-import LottieView from "lottie-react-native";
-import React, { useState } from "react";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import React, { useState } from 'react';
 import {
   Image,
   Pressable,
@@ -9,18 +9,18 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from "react-native-reanimated";
-import Bg from "../assets/images/bg.jpg";
-import Logo from "../assets/images/logo.jpg";
+} from 'react-native-reanimated';
+import Bg from '../assets/images/bg.jpg';
+import Logo from '../assets/images/logo.jpg';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const Card = () => {
+const Card = React.memo(({ color }: any) => {
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -37,112 +37,146 @@ const Card = () => {
   };
 
   const callAI = () => {};
-  const [bookmark, setBookmark] = useState<string>("");
+  const [bookmark, setBookmark] = useState<string>('');
 
   return (
     <AnimatedPressable
-      style={animatedStyle}
-      className="flex flex-col w-[95%] h-full border-[1px] border-white rounded-[7px] bg-blue-400"
+      style={[animatedStyle, { backgroundColor: color, elevation: 5 }]}
+      className="flex flex-1 w-[94%] h-full rounded-3xl
+      overflow-visible self-center mt-9 shadow-lg shadow-white/50 border-[0.2px] border-[rgba(255,255,255,0.1)]"
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
       <Pressable
-        className="flex-1 justify-start items-center bg-inherit"
-        onPress={() => router.push("/screens/aichat")}
+        className="flex-1 justify-start bg-inherit"
+        onPress={() => router.push({ pathname: '/screens/aichat',
+  params: { color },})}
       >
-        <Image source={Bg} className="w-[96%] h-[50%] mt-2 rounded-[7px]" />
-        <View className=" w-full max-h-[120px] p-1">
-          <Text className="text-4xl font-bold text-white py-2 px-1">
-            Lorem ipsum cars sitamet consectetur adipisicing elit.
+        <Image source={Bg} className="w-[100%] h-[60%] rounded-t-3xl" />
+        <View className="absolute top-[42%] w-full max-h-[105px] px-1">
+          <Text
+            className="text-3xl font-medium text-white py-0 px-1 bg-[rgba(0,0,0,0.1)]"
+            numberOfLines={3}
+            ellipsizeMode="tail"
+          >
+            Lorem ipsum cars sitamet consectetur adipisicing elit.consectetur
+            cing elit.consectetur adipisicing elit.
           </Text>
+        </View>
+        <View className="self-start flex flex-row justify-center items-center gap-2">
+          <View className=" flex flex-row justify-between items-center gap-1 py-[2px] bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-[12px] px-1 my-2 ml-2 ">
+            <Image
+              source={Logo}
+              className="w-4 h-4 rounded-full border-[0.5px] border-[#4fc3f7]"
+            ></Image>
+            <Text className="text-[#4fc3f7] font-semibold text-[12px]">
+              Chaitanyapotti
+            </Text>
+          </View>
+          <Text className="text-[14px] font-semibold text-white">2h ago.</Text>
         </View>
         {/* ANOTHER TEXT */}
         <View className="w-full">
-          <Text className="text-white px-3 text-[18px] h-[155px] ">
+          <Text
+            className="text-white px-3 text-[18px]"
+            numberOfLines={8}
+            ellipsizeMode="tail"
+          >
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam ex
             iusto libero totam tenetur sed. Molestias sapiente atque
             exercitationem incidunt deserunt, cupiditate perferendis officiis
             distinctio sint rerum fugit vel quis.libero totam tenetur sed.
             Molestias sapiente atque exercitationem incidunt deserunt,
             cupiditate perferendis officiis distinctio sint rerum fugit vel
-            quis.
+            quis.rendis officiis distinctio sint rerum fugit vel quis.
           </Text>
         </View>
       </Pressable>
-      <View className="flex flex-row justify-between items-center  mb-3 px-3">
-        <View className="flex flex-row justify-between items-center gap-2 py-[3px] pr-[12px] bg-[#1a1f35] border border-[#4fc3f7] rounded-[12px] pl-2">
-          <Image
-            source={Logo}
-            className="w-6 h-6 rounded-full border border-[#4fc3f7]"
-          ></Image>
-          <Text className="text-[#4fc3f7] font-semibold text-[12px]">
-            ChaitanyaPotti
-          </Text>
-        </View>
-        <View className="flex flex-row justify-center items-center gap-6">
-          <TouchableOpacity
-            onPress={() => {
-              if (bookmark === "success") {
-                setBookmark("");
-                return;
-              }
+      <View className="flex flex-row justify-start items-center px-2 pt-2 m-1 border-t-[0.5px] border-white gap-2">
+        <TouchableOpacity
+          className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] "
+          onPress={() => {
+            if (bookmark === 'success') {
+              setBookmark('');
+              return;
+            }
 
-              setBookmark("loading");
-              console.log("calling api");
-              setTimeout(() => {
-                setBookmark("success");
-              }, 3000);
-            }}
-          >
-            {bookmark === "loading" ? (
+            setBookmark('loading');
+            console.log('calling api');
+            setTimeout(() => {
+              setBookmark('success');
+            }, 3000);
+          }}
+        >
+          {bookmark === 'loading' ? (
+            <View className="p-[8px]">
               <LottieView
-                source={require("../assets/animations/star-loading.json")}
+                source={require('../assets/animations/star-loading.json')}
                 autoPlay
                 loop
-                style={{ width: 28, height: 28 }}
+                style={{ width: 15, height: 15 }}
+                colorFilters={[
+                  {
+                    keypath: '**',
+                    color: '#4fc3f7', // your highlight color
+                  },
+                ]}
               />
-            ) : bookmark === "success" ? (
-              <FontAwesome5
-                name="bookmark"
-                size={18}
-                color="#4fc3f7"
-                solid={true}
-                className="px-3 py-[8px] bg-[#1a1f35] border border-[#4fc3f7] rounded-full self-center"
-              />
-            ) : (
-              <FontAwesome5
-                name="bookmark"
-                size={18}
-                color="#4fc3f7"
-                solid={false}
-                className="px-3 py-[8px] bg-[#1a1f35] border border-[#4fc3f7] rounded-full self-center"
-              />
-            )}
-          </TouchableOpacity>
+            </View>
+          ) : bookmark === 'success' ? (
+            <MaterialCommunityIcons
+              name="bookmark"
+              size={13}
+              color="#4fc3f7"
+              solid={true}
+              className="p-2 pl-3"
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name="bookmark"
+              size={13}
+              color="#4fc3f7"
+              solid={true}
+              className="p-2 pl-3"
+            />
+          )}
+          <Text className="text-[#4fc3f7] font-semibold pr-2">Saved</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity>
-            <FontAwesome5
-              name="comment"
-              size={18}
-              color="#4fc3f7"
-              solid={false}
-              className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <FontAwesome5
-              name="headphones"
-              size={18}
-              color="#4fc3f7"
-              solid={false}
-              className="px-[8px] py-[8px] bg-[#1a1f35] border border-[#4fc3f7] text-[#4fc3f7] rounded-full self-center"
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
+          <MaterialCommunityIcons
+            name="comment"
+            size={13}
+            color="#4fc3f7"
+            solid={false}
+            className="p-2 pl-3"
+          />
+          <Text className="text-[#4fc3f7] font-semibold pr-2">comments</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
+          <MaterialCommunityIcons
+            name="waveform"
+            size={13}
+            color="#4fc3f7"
+            solid={false}
+            className="p-2 pl-3"
+          />
+          <Text className="text-[#4fc3f7] font-semibold pr-2">Listen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
+          <MaterialCommunityIcons
+            name="share"
+            size={13}
+            color="#4fc3f7"
+            solid={false}
+            className="p-2 pl-3"
+          />
+          <Text className="text-[#4fc3f7] font-semibold pr-2">Share</Text>
+        </TouchableOpacity>
       </View>
     </AnimatedPressable>
   );
-};
+});
 
 export default Card;
 

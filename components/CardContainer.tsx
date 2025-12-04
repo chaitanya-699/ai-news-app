@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -6,41 +6,63 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
+  View,
 } from "react-native";
 import Card from "./Card";
-import { CardItem, DATA } from "./Data";
+import { CardItem, DATA, newsCardColors } from "./Data";
+
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Configuration
-const CARD_HEIGHT = 620;
-const CARD_WIDTH = 370;
-const SPACING = 10;
+const CARD_HEIGHT = 590;
+const SPACING = 20;
 const ITEM_SIZE = CARD_HEIGHT + SPACING;
-const SWIPE_THRESHOLD = 5;
 
 const CardContainer = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<CardItem>>(null);
-  const currentIndex = useRef<number>(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollBeginY = useRef<number>(0);
+  const isScrolling = useRef(false);
+
+  // Add colors to data
+  const DATA_WITH_COLORS = DATA.map((item, index) => ({
+    ...item,
+    color: newsCardColors[index % newsCardColors.length],
+  }));
 
   const onScrollBeginDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const yOffset = e.nativeEvent.contentOffset.y;
-    currentIndex.current = Math.round(yOffset / ITEM_SIZE);
-    scrollBeginY.current = yOffset;
+    scrollBeginY.current = e.nativeEvent.contentOffset.y;
+    isScrolling.current = true;
   };
 
   const onScrollEndDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const yOffset = e.nativeEvent.contentOffset.y;
-    const diff = yOffset - scrollBeginY.current;
-    let targetIndex = currentIndex.current;
-    if (diff > SWIPE_THRESHOLD) targetIndex = currentIndex.current + 1;
-    else if (diff < -SWIPE_THRESHOLD) targetIndex = currentIndex.current - 1;
-    targetIndex = Math.max(0, Math.min(targetIndex, DATA.length - 1));
-    flatListRef.current?.scrollToOffset({
-      offset: targetIndex * ITEM_SIZE,
+    if (!isScrolling.current) return;
+
+    const currentOffset = e.nativeEvent.contentOffset.y;
+    const diff = currentOffset - scrollBeginY.current;
+
+    // Determine direction: positive = swipe up (next), negative = swipe down (prev)
+    let targetIndex = currentIndex;
+
+    if (Math.abs(diff) > 20) { // Minimum swipe threshold
+      if (diff > 0) {
+        // Swiped up - go to next card
+        targetIndex = Math.min(currentIndex + 1, DATA_WITH_COLORS.length - 1);
+      } else {
+        // Swiped down - go to previous card
+        targetIndex = Math.max(currentIndex - 1, 0);
+      }
+    }
+
+    // Scroll to the target card
+    flatListRef.current?.scrollToIndex({
+      index: targetIndex,
       animated: true,
     });
+
+    setCurrentIndex(targetIndex);
+    isScrolling.current = false;
   };
 
   const renderItem = ({ item, index }: { item: CardItem; index: number }) => {
@@ -52,15 +74,16 @@ const CardContainer = () => {
 
     const scale = scrollY.interpolate({
       inputRange,
-      outputRange: [0.92, 1, 0.92],
+      outputRange: [0.97, 1, 0.97],
       extrapolate: "clamp",
     });
 
     const opacity = scrollY.interpolate({
       inputRange,
-      outputRange: [0.2, 1, 0.2],
+      outputRange: [0, 1, 0],
       extrapolate: "clamp",
     });
+
     return (
       <Animated.View
         style={[
@@ -71,35 +94,52 @@ const CardContainer = () => {
           },
         ]}
       >
-        <Card />
+        <Card color={item.color} />
       </Animated.View>
     );
   };
 
-  const FlatListComponent = () => (
-    <Animated.FlatList
-      ref={flatListRef}
-      data={DATA}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.contentContainer}
-      snapToInterval={ITEM_SIZE}
-      snapToAlignment="start"
-      decelerationRate={0}
-      bounces={false}
-      onScroll={Animated.event(
-        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-        { useNativeDriver: true }
-      )}
-      scrollEventThrottle={10}
-      onScrollBeginDrag={onScrollBeginDrag}
-      onScrollEndDrag={onScrollEndDrag}
-      pagingEnabled={false}
-    />
-  );
+  return (
+    <View style={styles.container}>
+      <Animated.FlatList
+        ref={flatListRef}
+        data={DATA_WITH_COLORS}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
 
-  return <FlatListComponent />;
+        // Disable automatic snapping - we control it manually
+        pagingEnabled={false}
+        bounces={false}
+        scrollEnabled={true}
+
+        // Smooth animations
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
+
+        // Manual control for one-card-per-swipe
+        onScrollBeginDrag={onScrollBeginDrag}
+        onScrollEndDrag={onScrollEndDrag}
+
+        // Performance optimizations
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={2}
+        windowSize={5}
+        initialNumToRender={3}
+
+        // Important: helps with scrollToIndex
+        getItemLayout={(data, index) => ({
+          length: ITEM_SIZE,
+          offset: ITEM_SIZE * index,
+          index,
+        })}
+      />
+    </View>
+  );
 };
 
 export default CardContainer;
@@ -107,7 +147,7 @@ export default CardContainer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a1a2e",
+    backgroundColor: "rgb(20,20,30, 0.7)",
   },
   contentContainer: {
     paddingTop: (SCREEN_HEIGHT - CARD_HEIGHT) / 2 - SPACING / 2,
@@ -117,29 +157,5 @@ const styles = StyleSheet.create({
     height: ITEM_SIZE,
     alignItems: "center",
     justifyContent: "center",
-  },
-  card: {
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
-    borderRadius: 20,
-    padding: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#fff",
-    opacity: 0.8,
   },
 });
