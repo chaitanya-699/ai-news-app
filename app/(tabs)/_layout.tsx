@@ -1,141 +1,118 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React, { memo, useEffect } from "react";
-import { StyleSheet } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import React from "react";
+import { Text, View } from "react-native";
 
-// === ICON COMPONENT ===
-interface TabBarIconProps {
-  focused: boolean;
-  name: string;
-  activeColor?: string;
-  inactiveColor?: string;
-  backgroundColor?: string;
-}
-
-const TabBarIcon = memo<TabBarIconProps>(
-  ({
-    focused,
-    name,
-    activeColor = "#4fc3f7",
-    inactiveColor = "white",
-    backgroundColor = "#28282b",
-  }) => {
-    const animationProgress = useSharedValue(0);
-
-    useEffect(() => {
-      animationProgress.value = withSpring(focused ? 1 : 0, {
-        damping: 15,
-        stiffness: 150,
-      });
-    }, [focused]);
-
-    const containerStyle = useAnimatedStyle(() => {
-      const scale = interpolate(animationProgress.value, [0, 1], [0.8, 1]);
-      return { transform: [{ scale }] };
-    });
-
-    const bgStyle = useAnimatedStyle(() => {
-      const opacity = interpolate(animationProgress.value, [0, 1], [0, 1]);
-      const scale = interpolate(animationProgress.value, [0, 1], [0.7, 1]);
-      return {
-        opacity,
-        transform: [{ scale }],
-      };
-    });
-
-    const iconStyle = useAnimatedStyle(() => {
-      const scale = interpolate(animationProgress.value, [0, 1], [0.72, 1]);
-      return {
-        transform: [{ scale }],
-      };
-    });
-
-    return (
-      <Animated.View style={[styles.container, containerStyle]}>
-        <Animated.View
-          style={[styles.background, { backgroundColor }, bgStyle]}
-        />
-        <Animated.View style={iconStyle}>
-          <FontAwesome5
-            name={name}
-            size={22}
-            color={focused ? activeColor : inactiveColor}
-          />
-        </Animated.View>
-      </Animated.View>
-    );
-  }
-);
+import { TabBarItems } from "../../interfaces/interfaces";
 
 const _layout = () => {
+  const CustomeTabBarIcon: any = (props: TabBarItems) => {
+    if (props.focused) {
+      return (
+        <View className=" flex flex-row flex-1 gap-1 items-center justify-center rounded-full min-w-[92px] min-h-[50px] bg-[#1A1F35]">
+          <MaterialCommunityIcons
+            name={props.iconName}
+            color="#4fc3f7"
+            size={props.size + 2}
+          />
+          <Text className="text-[#4fc3f7] text-[12px]">{props.tabName}</Text>
+        </View>
+      );
+    } else {
+      return (
+        <View className=" flex flex-row flex-1 gap-1 items-center justify-center rounded-full min-w-[102px] min-h-[50px]">
+          <MaterialCommunityIcons
+            name={props.iconName}
+            color="white"
+            size={props.size}
+          />
+          <Text className="text-white text-[12px]">{props.tabName}</Text>
+        </View>
+      );
+    }
+  };
+
   return (
     <Tabs
       screenOptions={{
-        animation: "fade",
-        lazy: false,
-        freezeOnBlur: true,
-        sceneStyle: {
-          backgroundColor: "transparent",
-        },
         tabBarShowLabel: false,
-        // 🔥 DYNAMIC TAB BAR VISIBILITY HERE
-        tabBarStyle:
-         {
+        tabBarItemStyle: {
           width: "100%",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 6,
+        },
+        tabBarStyle: {
+          backgroundColor: "#121827",
+          borderRadius: 50,
+          marginHorizontal: 10,
+          height: 51,
+          marginBottom: 15,
           position: "absolute",
-          bottom: 0,
-          height: 55,
-          backgroundColor: "rgba(40,40,43,0.5)",
-          paddingHorizontal: 0,
-          paddingVertical: 0,
-          elevation: 0,
+          overflow: "hidden",
           borderTopWidth: 0,
+          elevation: 0,
         },
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
           headerShown: false,
+          title: "Home",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="home" />
+            <CustomeTabBarIcon
+              focused={focused}
+              iconName="home-outline"
+              size={20}
+              tabName="Home"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="saved"
         options={{
-          title: "Saved",
           headerShown: false,
+          title: "Settings",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="bookmark" />
+            <CustomeTabBarIcon
+              focused={focused}
+              iconName="bookmark-outline"
+              size={20}
+              tabName="Saved"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="personlize"
         options={{
-          title: "Personalize",
           headerShown: false,
+          title: "Personlize",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="heart" />
+            <CustomeTabBarIcon
+              focused={focused}
+              iconName="tune-variant"
+              size={20}
+              tabName="Tune"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
           headerShown: false,
+          title: "profile",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="user" />
+            <CustomeTabBarIcon
+              focused={focused}
+              iconName="account-circle-outline"
+              size={20}
+              tabName="Profile"
+            />
           ),
         }}
       />
@@ -144,20 +121,3 @@ const _layout = () => {
 };
 
 export default _layout;
-
-// === STYLES ===
-const styles = StyleSheet.create({
-  container: {
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  background: {
-    position: "absolute",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-});

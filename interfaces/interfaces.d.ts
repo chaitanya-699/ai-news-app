@@ -75,3 +75,10 @@ interface TrendingCardProps {
   movie: TrendingMovie;
   index: number;
 }
+
+export interface TabBarItems {
+    focused: boolean;
+    iconName: any;
+    size: number;
+    tabName: string;
+  }

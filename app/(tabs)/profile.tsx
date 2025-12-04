@@ -46,13 +46,13 @@ const Profile = () => {
   const ProfileComponent: any = () => <View></View>;
 
   return (
-    <ImageBackground
-      source={BG}
-      style={styles.container}
-      className="items-center justify-center"
-    >
-      {isLogged ? <IsLoggedComponent /> : <ProfileComponent />}
-    </ImageBackground>
+      <ImageBackground
+        source={BG}
+        style={styles.container}
+        className="items-center justify-center"
+      >
+        {isLogged ? <IsLoggedComponent /> : <ProfileComponent />}
+      </ImageBackground>
   );
 };
 const styles = StyleSheet.create({

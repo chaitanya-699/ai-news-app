@@ -1,22 +1,21 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import LottieView from 'lottie-react-native';
-import React, { useState } from 'react';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import LottieView from "lottie-react-native";
+import React, { useState } from "react";
 import {
   Image,
   Pressable,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
-import Bg from '../assets/images/bg.jpg';
-import Logo from '../assets/images/logo.jpg';
+} from "react-native-reanimated";
+import Bg from "../assets/images/bg.jpg";
+import Logo from "../assets/images/logo.jpg";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -36,8 +35,7 @@ const Card = React.memo(({ color }: any) => {
     scale.value = withSpring(1, { damping: 45 });
   };
 
-  const callAI = () => {};
-  const [bookmark, setBookmark] = useState<string>('');
+  const [bookmark, setBookmark] = useState<string>("");
 
   return (
     <AnimatedPressable
@@ -49,8 +47,9 @@ const Card = React.memo(({ color }: any) => {
     >
       <Pressable
         className="flex-1 justify-start bg-inherit"
-        onPress={() => router.push({ pathname: '/screens/aichat',
-  params: { color },})}
+        onPress={() =>
+          router.push({ pathname: "/screens/aichat", params: { color } })
+        }
       >
         <Image source={Bg} className="w-[100%] h-[60%] rounded-t-3xl" />
         <View className="absolute top-[42%] w-full max-h-[105px] px-1">
@@ -96,34 +95,34 @@ const Card = React.memo(({ color }: any) => {
         <TouchableOpacity
           className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] "
           onPress={() => {
-            if (bookmark === 'success') {
-              setBookmark('');
+            if (bookmark === "success") {
+              setBookmark("");
               return;
             }
 
-            setBookmark('loading');
-            console.log('calling api');
+            setBookmark("loading");
+            console.log("calling api");
             setTimeout(() => {
-              setBookmark('success');
+              setBookmark("success");
             }, 3000);
           }}
         >
-          {bookmark === 'loading' ? (
-            <View className="p-[8px]">
+          {bookmark === "loading" ? (
+            <View className="">
               <LottieView
-                source={require('../assets/animations/star-loading.json')}
+                source={require("../assets/animations/Loading....json")}
                 autoPlay
                 loop
-                style={{ width: 15, height: 15 }}
+                style={{ width: 31, height: 31 }}
                 colorFilters={[
                   {
-                    keypath: '**',
-                    color: '#4fc3f7', // your highlight color
+                    keypath: "**",
+                    color: "#4fc3f7", // your highlight color
                   },
                 ]}
               />
             </View>
-          ) : bookmark === 'success' ? (
+          ) : bookmark === "success" ? (
             <MaterialCommunityIcons
               name="bookmark"
               size={13}
@@ -178,6 +177,8 @@ const Card = React.memo(({ color }: any) => {
   );
 });
 
+Card.displayName = 'Card';
+
 export default Card;
 
-const styles = StyleSheet.create({});
+

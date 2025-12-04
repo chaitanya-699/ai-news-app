@@ -93,11 +93,9 @@ const HomeTabs = () => {
       >
         {CATEGORIES.map((item) => {
           return (
-            <Tab.Screen
-              key={item}
-              name={item}
-              children={() => <CardContainer />}
-            />
+            <Tab.Screen key={item} name={item}>
+              {() => <CardContainer />}
+            </Tab.Screen>
           );
         })}
       </Tab.Navigator>
