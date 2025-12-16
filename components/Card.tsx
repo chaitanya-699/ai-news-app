@@ -2,13 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useState } from "react";
-import {
-  Image,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -62,7 +56,7 @@ const Card = React.memo(({ color }: any) => {
             cing elit.consectetur adipisicing elit.
           </Text>
         </View>
-        <View className="self-start flex flex-row justify-center items-center gap-2">
+        <View className="self-start flex flex-row justify-center items-center gap-1">
           <View className=" flex flex-row justify-between items-center gap-1 py-[2px] bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-[12px] px-1 my-2 ml-2 ">
             <Image
               source={Logo}
@@ -72,7 +66,16 @@ const Card = React.memo(({ color }: any) => {
               Chaitanyapotti
             </Text>
           </View>
+
           <Text className="text-[14px] font-semibold text-white">2h ago.</Text>
+          <Pressable>
+            <MaterialCommunityIcons
+              name="open-in-new"
+              color="white"
+              className="font-semibold pr-3"
+              size={13}
+            />
+          </Pressable>
         </View>
         {/* ANOTHER TEXT */}
         <View className="w-full">
@@ -177,8 +180,6 @@ const Card = React.memo(({ color }: any) => {
   );
 });
 
-Card.displayName = 'Card';
+Card.displayName = "Card";
 
 export default Card;
-
-

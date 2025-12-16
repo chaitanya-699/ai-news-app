@@ -13,6 +13,7 @@ const Home: React.FC = memo(() => {
   );
 });
 
+Home.displayName = "Home";
 const styles = StyleSheet.create({
   container: {
     flex: 1,

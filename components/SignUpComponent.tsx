@@ -12,9 +12,11 @@ import {
 const SignUpComponent = ({
   signUpClick,
   fadeAnim,
+  isLogged,
 }: {
   signUpClick: any;
   fadeAnim: any;
+  isLogged: any;
 }) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");

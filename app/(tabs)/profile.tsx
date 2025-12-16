@@ -1,12 +1,18 @@
 import LoginComponent from "@/components/LoginComponent";
 import SignUpComponent from "@/components/SignUpComponent";
 import React, { useRef, useState } from "react";
-import { Animated, ImageBackground, StyleSheet, View } from "react-native";
+import {
+  Animated,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import BG from "../../assets/images/bg.jpg";
 
 const Profile = () => {
   const [clickSignUp, setClickSignUp] = useState<boolean | null>(true);
-  const [isLogged, setIsLogged] = useState<boolean | null>(true);
+  const [isLogged, setIsLogged] = useState<boolean | null>(false);
   const fadeAnimate = useRef(new Animated.Value(1)).current;
 
   const toggleAuthComponents: any = () => {
@@ -31,6 +37,7 @@ const Profile = () => {
         <LoginComponent
           signUpClick={toggleAuthComponents}
           fadeAnim={fadeAnimate}
+          isLogged={setIsLogged}
         />
       );
     } else {
@@ -38,21 +45,30 @@ const Profile = () => {
         <SignUpComponent
           signUpClick={toggleAuthComponents}
           fadeAnim={fadeAnimate}
+          isLogged={setIsLogged}
         />
       );
     }
   };
 
-  const ProfileComponent: any = () => <View></View>;
+  const ProfileComponent: any = () => (
+    <View>
+      <Text className="text-white text-3xl font-bold">
+        Welcome to your Profile!
+      </Text>
+    </View>
+  );
 
   return (
+    <Animated.View style={{ flex: 1 }}>
       <ImageBackground
         source={BG}
         style={styles.container}
         className="items-center justify-center"
       >
-        {isLogged ? <IsLoggedComponent /> : <ProfileComponent />}
+        {isLogged ? <ProfileComponent /> : <IsLoggedComponent />}
       </ImageBackground>
+    </Animated.View>
   );
 };
 const styles = StyleSheet.create({

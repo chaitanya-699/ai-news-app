@@ -82,3 +82,9 @@ export interface TabBarItems {
     size: number;
     tabName: string;
   }
+
+export interface User {
+  id: number;
+  fullName: string;
+  email: string;
+}

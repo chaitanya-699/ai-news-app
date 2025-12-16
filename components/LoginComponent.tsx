@@ -1,16 +1,54 @@
-import { View, Text, TextInput, TouchableOpacity, Animated } from "react-native";
-import React, { useState } from "react";
+import { useAuth } from "@/auth/useAuth";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
+import React, { useState } from "react";
+import {
+  Animated,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
+const LoginComponent = ({
+  signUpClick,
+  fadeAnim,
+  isLogged,
+}: {
+  signUpClick: any;
+  fadeAnim: any;
+  isLogged: any;
+}) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const { login, setToken } = useAuth();
 
-const LoginComponent = ({ signUpClick, fadeAnim }: { signUpClick : any, fadeAnim: any }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const handleSignIn = async () => {
+    try {
+      const response = await axios.post(
+        "http://10.75.230.58:8080/api/v1/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
+      console.log(response.data);
+      login(response.data);
+      setToken(response.data.token);
+      isLogged(true);
+    } catch (error: Error | any) {
+      // Handle login error
+      console.log("Login error: ", error);
+    }
+  };
 
   return (
-    <Animated.View className="flex flex-col w-[95%] h-[80%] border-2 border-white/20 rounded-3xl items-center justify-center px-6 bg-black/40" style={{ opacity:fadeAnim}}>
+    <Animated.View
+      className="flex flex-col w-[95%] h-[80%] border-2 border-white/20 rounded-3xl items-center justify-center px-6 bg-black/40"
+      style={{ opacity: fadeAnim }}
+    >
       {/* Header */}
       <View className="mb-8">
         <Text className="text-white text-3xl font-bold text-center mb-2">
@@ -67,7 +105,10 @@ const LoginComponent = ({ signUpClick, fadeAnim }: { signUpClick : any, fadeAnim
       </TouchableOpacity>
 
       {/* Login Button */}
-      <TouchableOpacity className="w-full bg-[#234C6A] rounded-2xl py-4 mb-6">
+      <TouchableOpacity
+        className="w-full bg-[#234C6A] rounded-2xl py-4 mb-6"
+        onPress={handleSignIn}
+      >
         <Text className="text-white text-center text-base font-semibold">
           Sign In
         </Text>
@@ -90,14 +131,20 @@ const LoginComponent = ({ signUpClick, fadeAnim }: { signUpClick : any, fadeAnim
 
       {/* Sign Up Link */}
       <View className="flex-row mt-4">
-        <Text className="text-gray-400 text-sm">Don't have an account? </Text>
+        <Text className="text-gray-400 text-sm">
+          Don&apos;t have an account?{" "}
+        </Text>
         <TouchableOpacity>
-          <Text className="text-[#D2C1B6] text-sm font-semibold" onPress={signUpClick}>Sign Up</Text>
+          <Text
+            className="text-[#D2C1B6] text-sm font-semibold"
+            onPress={signUpClick}
+          >
+            Sign Up
+          </Text>
         </TouchableOpacity>
       </View>
     </Animated.View>
   );
 };
-
 
 export default LoginComponent;
