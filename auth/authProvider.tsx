@@ -32,7 +32,7 @@ export const AuthProvider: any = ({ children }: any) => {
     await SecureStore.deleteItemAsync("token");
   };
   return (
-    <AuthContext.Provider value={{ user, token, setToken,  login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, setToken, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

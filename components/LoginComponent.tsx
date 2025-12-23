@@ -14,12 +14,16 @@ const LoginComponent = ({
   signUpClick,
   fadeAnim,
   isLogged,
+  onForgotPassword,
+  onForgotUsername,
 }: {
   signUpClick: any;
   fadeAnim: any;
   isLogged: any;
+  onForgotPassword?: any;
+  onForgotUsername?: any;
 }) => {
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -27,13 +31,10 @@ const LoginComponent = ({
 
   const handleSignIn = async () => {
     try {
-      const response = await axios.post(
-        "http://10.75.230.58:8080/api/v1/login",
-        {
-          email: email,
-          password: password,
-        }
-      );
+      const response = await axios.post("http://10.75.230.58:8080/auth/login", {
+        username: username,
+        password: password,
+      });
       console.log(response.data);
       login(response.data);
       setToken(response.data.token);
@@ -61,14 +62,14 @@ const LoginComponent = ({
 
       {/* Email Input */}
       <View className="w-full mb-4">
-        <Text className="text-white text-sm mb-2 ml-1">Email</Text>
+        <Text className="text-white text-sm mb-2 ml-1">Username</Text>
         <View className="flex-row items-center bg-white/10 rounded-2xl px-4 py-3 border border-white/20">
-          <MaterialIcons name="email" size={20} color="#9CA3AF" />
+          <MaterialIcons name="person" size={20} color="#9CA3AF" />
           <TextInput
-            placeholder="Enter your email"
+            placeholder="Enter your username"
             placeholderTextColor="#6B7280"
-            value={email}
-            onChangeText={setEmail}
+            value={username}
+            onChangeText={setUsername}
             keyboardType="email-address"
             autoCapitalize="none"
             className="flex-1 ml-3 text-white text-base"
@@ -100,9 +101,14 @@ const LoginComponent = ({
       </View>
 
       {/* Forgot Password */}
-      <TouchableOpacity className="self-end mb-6">
-        <Text className="text-[#D2C1B6] text-sm">Forgot Password?</Text>
-      </TouchableOpacity>
+      <View className="flex-row justify-between w-full mb-6">
+        <TouchableOpacity onPress={onForgotUsername}>
+          <Text className="text-[#D2C1B6] text-sm">Forgot Username?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onForgotPassword}>
+          <Text className="text-[#D2C1B6] text-sm">Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Login Button */}
       <TouchableOpacity

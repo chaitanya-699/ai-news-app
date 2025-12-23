@@ -1,3 +1,5 @@
+import ForgotPasswordComponent from "@/components/ForgotPasswordComponent";
+import ForgotUsernameComponent from "@/components/ForgotUsernameComponent";
 import LoginComponent from "@/components/LoginComponent";
 import SignUpComponent from "@/components/SignUpComponent";
 import React, { useRef, useState } from "react";
@@ -11,17 +13,67 @@ import {
 import BG from "../../assets/images/bg.jpg";
 
 const Profile = () => {
-  const [clickSignUp, setClickSignUp] = useState<boolean | null>(true);
+  const [authView, setAuthView] = useState<
+    "login" | "signup" | "forgotPassword" | "forgotUsername"
+  >("login");
   const [isLogged, setIsLogged] = useState<boolean | null>(false);
   const fadeAnimate = useRef(new Animated.Value(1)).current;
 
-  const toggleAuthComponents: any = () => {
+  const toggleAuthComponents: any = (view: "login" | "signup") => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
       duration: 250,
       useNativeDriver: true,
     }).start(() => {
-      setClickSignUp((prev) => !prev);
+      setAuthView(view);
+
+      Animated.timing(fadeAnimate, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleForgotPassword = () => {
+    Animated.timing(fadeAnimate, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setAuthView("forgotPassword");
+
+      Animated.timing(fadeAnimate, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleForgotUsername = () => {
+    Animated.timing(fadeAnimate, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setAuthView("forgotUsername");
+
+      Animated.timing(fadeAnimate, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleBackToLogin = () => {
+    Animated.timing(fadeAnimate, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setAuthView("login");
 
       Animated.timing(fadeAnimate, {
         toValue: 1,
@@ -32,22 +84,41 @@ const Profile = () => {
   };
 
   const IsLoggedComponent: any = () => {
-    if (clickSignUp) {
-      return (
-        <LoginComponent
-          signUpClick={toggleAuthComponents}
-          fadeAnim={fadeAnimate}
-          isLogged={setIsLogged}
-        />
-      );
-    } else {
-      return (
-        <SignUpComponent
-          signUpClick={toggleAuthComponents}
-          fadeAnim={fadeAnimate}
-          isLogged={setIsLogged}
-        />
-      );
+    switch (authView) {
+      case "login":
+        return (
+          <LoginComponent
+            signUpClick={() => toggleAuthComponents("signup")}
+            fadeAnim={fadeAnimate}
+            isLogged={setIsLogged}
+            onForgotPassword={handleForgotPassword}
+            onForgotUsername={handleForgotUsername}
+          />
+        );
+      case "signup":
+        return (
+          <SignUpComponent
+            signUpClick={() => toggleAuthComponents("login")}
+            fadeAnim={fadeAnimate}
+            isLogged={setIsLogged}
+          />
+        );
+      case "forgotPassword":
+        return (
+          <ForgotPasswordComponent
+            onBack={handleBackToLogin}
+            fadeAnim={fadeAnimate}
+          />
+        );
+      case "forgotUsername":
+        return (
+          <ForgotUsernameComponent
+            onBack={handleBackToLogin}
+            fadeAnim={fadeAnimate}
+          />
+        );
+      default:
+        return null;
     }
   };
 

@@ -1,4 +1,7 @@
+import { useAuth } from "@/auth/useAuth";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
+import LottieView from "lottie-react-native";
 import React, { useState } from "react";
 import {
   Animated,
@@ -8,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Loading from "../assets/animations/Loading....json";
 
 const SignUpComponent = ({
   signUpClick,
@@ -18,13 +22,147 @@ const SignUpComponent = ({
   fadeAnim: any;
   isLogged: any;
 }) => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const { login } = useAuth();
+
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
+  const [showPasswordCriteria, setShowPasswordCriteria] =
+    useState<boolean>(false);
+  const [loadingUsername, setLoadingUsername] = useState<boolean>(false);
+  const [showUsernameCriteria, setShowUsernameCriteria] =
+    useState<boolean>(false);
+  const [showEmailCriteria, setShowEmailCriteria] = useState<boolean>(false);
+  const [passwordStrength, setPasswordStrength] = useState<{
+    capital: boolean;
+    lowercase: boolean;
+    number: boolean;
+    special: boolean;
+    length: boolean;
+  }>({
+    capital: false,
+    lowercase: false,
+    number: false,
+    special: false,
+    length: false,
+  });
+
+  const [signUpFieldsValid, setSignUpFieldsValid] = useState<{
+    validUsername: boolean;
+    validEmail: boolean;
+    validPassword: boolean;
+    validConfirmPassword: boolean;
+  }>({
+    validUsername: false,
+    validEmail: false,
+    validPassword: false,
+    validConfirmPassword: false,
+  });
+
+  const [confirmPasswordIndicator, setConfirmPasswordIndicator] = useState<
+    boolean | null
+  >(null);
+
+  const [showConfirmPasswordCriteria, setShowConfirmPasswordCriteria] =
+    useState(false);
+
+  async function handleSignUp() {
+    const allValid = Object.values(signUpFieldsValid).every(Boolean);
+    if (!allValid) {
+      alert("Please fill all fields correctly before signing up.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://10.75.230.58:8080/auth/signup",
+        {
+          username,
+          email,
+          password,
+        }
+      );
+
+      login({
+        token: response.data.token,
+        user: response.data.data,
+      });
+      isLogged(true);
+    } catch (error: any) {
+      console.error("Error signing up:", error.response.data.message);
+      alert(`Error signing up: ${error.response.data.message}`);
+    }
+  }
+
+  function updatePassword(pwd: string) {
+    const strength = {
+      capital: /[A-Z]/.test(pwd),
+      lowercase: /[a-z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[^A-Za-z0-9]/.test(pwd),
+      length: pwd.length >= 8 && pwd.length <= 20,
+    };
+
+    setPasswordStrength(strength);
+    setPassword(pwd);
+
+    const isStrong = Object.values(strength).every(Boolean);
+    if (isStrong) {
+      setSignUpFieldsValid((prev) => ({
+        ...prev,
+        validPassword: isStrong,
+      }));
+    } else {
+      setSignUpFieldsValid((prev) => ({
+        ...prev,
+        validPassword: false,
+      }));
+    }
+    setShowPasswordCriteria(!isStrong);
+
+    if (pwd.length === 0) {
+      setShowPasswordCriteria(false);
+    }
+  }
+
+  async function handleVerifyUsername() {
+    if (loadingUsername) return; // prevent double click
+
+    setLoadingUsername(true);
+    setSignUpFieldsValid((prev) => ({
+      ...prev,
+      validUsername: false,
+    }));
+
+    setTimeout(() => {
+      setLoadingUsername(false);
+      setSignUpFieldsValid((prev) => ({
+        ...prev,
+        validUsername: true,
+      }));
+    }, 2000);
+    // try {
+    //   const response = await axios.post(
+    //     "http://10.75.230.58:8080/auth/verify-username",
+    //     {
+    //       username,
+    //     }
+    //   );
+    //   console.log(response.data);
+    //   if (response.data.message === "Username is available") {
+    //     setSignUpFieldsValid((prev) => ({
+    //       ...prev,
+    //       validUsername: true,
+    //     }));
+    //   }
+    // } catch (error) {
+    //   console.error("Error verifying username:", error);
+    // }
+  }
 
   return (
     <Animated.View
@@ -52,13 +190,45 @@ const SignUpComponent = ({
           <View className="flex-row items-center bg-white/10 rounded-2xl px-4 py-3 border border-white/20">
             <MaterialIcons name="person" size={20} color="#9CA3AF" />
             <TextInput
-              placeholder="Enter your full name"
+              placeholder="Enter username"
               placeholderTextColor="#6B7280"
-              value={fullName}
-              onChangeText={setFullName}
+              value={username}
+              onChangeText={(text) => {
+                setUsername(text);
+                setSignUpFieldsValid((prev) => ({
+                  ...prev,
+                  validUsername: false,
+                }));
+                if (text.length === 0) {
+                  setShowUsernameCriteria(false);
+                } else {
+                  setShowUsernameCriteria(true);
+                }
+              }}
               autoCapitalize="words"
               className="flex-1 ml-3 text-white text-base"
             />
+
+            {showUsernameCriteria && (
+              <TouchableOpacity onPress={handleVerifyUsername} className=" p-2">
+                {loadingUsername ? (
+                  <LottieView
+                    source={Loading}
+                    autoPlay
+                    loop
+                    style={{ width: 20, height: 20 }}
+                  />
+                ) : signUpFieldsValid.validUsername ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={20}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={19} color="#EF4444" />
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -71,16 +241,134 @@ const SignUpComponent = ({
               placeholder="Enter your email"
               placeholderTextColor="#6B7280"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => {
+                setShowEmailCriteria(true);
+                setEmail(text);
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(text)) {
+                  setSignUpFieldsValid((prev) => ({
+                    ...prev,
+                    validEmail: true,
+                  }));
+                } else {
+                  setSignUpFieldsValid((prev) => ({
+                    ...prev,
+                    validEmail: false,
+                  }));
+                }
+
+                if (text.length === 0) {
+                  setShowEmailCriteria(false);
+                } else {
+                  setShowEmailCriteria(true);
+                }
+              }}
               keyboardType="email-address"
               autoCapitalize="none"
               className="flex-1 ml-3 text-white text-base"
             />
+            {showEmailCriteria && (
+              <TouchableOpacity disabled={true} className=" p-2">
+                {signUpFieldsValid.validEmail ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={20}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={19} color="#EF4444" />
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
         {/* Password Input */}
         <View className="w-full mb-4">
+          {showPasswordCriteria && (
+            <View className="absolute top-[95%] left-10 z-10 w-[250px] h-auto bg-white p-2 rounded-md ">
+              <View
+                style={{
+                  position: "absolute",
+                  top: -10,
+                  left: 10, // adjust as needed
+                  width: 0,
+                  height: 0,
+                  borderLeftWidth: 10,
+                  borderRightWidth: 10,
+                  borderBottomWidth: 10,
+                  borderLeftColor: "transparent",
+                  borderRightColor: "transparent",
+                  borderBottomColor: "white",
+                }}
+              ></View>
+              <View className="flex flex-row items-center justify-start gap-1">
+                {passwordStrength.capital ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={17}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={17} color="#EF4444" />
+                )}
+
+                <Text>Contain Capital letter</Text>
+              </View>
+
+              <View className="flex flex-row items-center justify-start gap-1">
+                {passwordStrength.lowercase ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={17}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={17} color="#EF4444" />
+                )}
+                <Text>Contain Lowercase letter</Text>
+              </View>
+
+              <View className="flex flex-row items-center justify-start gap-1">
+                {passwordStrength.number ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={17}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={17} color="#EF4444" />
+                )}
+                <Text>Contain Number</Text>
+              </View>
+
+              <View className="flex flex-row items-center justify-start gap-1">
+                {passwordStrength.special ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={17}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={17} color="#EF4444" />
+                )}
+                <Text>Contain Special Character</Text>
+              </View>
+              <View className="flex flex-row items-center justify-start gap-1">
+                {passwordStrength.length ? (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={17}
+                    color="#34D399"
+                  />
+                ) : (
+                  <MaterialIcons name="error" size={17} color="#EF4444" />
+                )}
+                <Text>length 8-20 characters</Text>
+              </View>
+            </View>
+          )}
+
           <Text className="text-white text-sm mb-2 ml-1">Password</Text>
           <View className="flex-row items-center bg-white/10 rounded-2xl px-4 py-3 border border-white/20">
             <MaterialIcons name="lock" size={20} color="#9CA3AF" />
@@ -88,11 +376,15 @@ const SignUpComponent = ({
               placeholder="Create a password"
               placeholderTextColor="#6B7280"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={updatePassword}
               secureTextEntry={!showPassword}
               className="flex-1 ml-3 text-white text-base"
+              onBlur={() => setShowPasswordCriteria(false)}
             />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <TouchableOpacity
+              className=" p-2"
+              onPress={() => setShowPassword(!showPassword)}
+            >
               <MaterialIcons
                 name={showPassword ? "visibility" : "visibility-off"}
                 size={20}
@@ -104,6 +396,39 @@ const SignUpComponent = ({
 
         {/* Confirm Password Input */}
         <View className="w-full mb-4">
+          {showConfirmPasswordCriteria && (
+            <View className="absolute z-10 top-[95%] left-10 w-[250px] h-auto bg-white p-2 rounded-md ">
+              <View
+                style={{
+                  position: "absolute",
+                  top: -10,
+                  left: 10, // adjust as needed
+                  width: 0,
+                  height: 0,
+                  borderLeftWidth: 10,
+                  borderRightWidth: 10,
+                  borderBottomWidth: 10,
+                  borderLeftColor: "transparent",
+                  borderRightColor: "transparent",
+                  borderBottomColor: "white",
+                }}
+              ></View>
+
+              <View className="flex flex-row justify-start items-center gap-2">
+                {confirmPasswordIndicator ? (
+                  <MaterialIcons name="check-circle" size={17} color="green" />
+                ) : (
+                  <MaterialIcons name="cancel" size={17} color="red" />
+                )}
+                <Text>
+                  {confirmPasswordIndicator
+                    ? "Password match"
+                    : "Password do not match"}
+                </Text>
+              </View>
+            </View>
+          )}
+
           <Text className="text-white text-sm mb-2 ml-1">Confirm Password</Text>
           <View className="flex-row items-center bg-white/10 rounded-2xl px-4 py-3 border border-white/20">
             <MaterialIcons name="lock-outline" size={20} color="#9CA3AF" />
@@ -111,11 +436,36 @@ const SignUpComponent = ({
               placeholder="Confirm your password"
               placeholderTextColor="#6B7280"
               value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              onBlur={() => setShowConfirmPasswordCriteria(false)}
+              onChangeText={(text) => {
+                if (text.length === 0) {
+                  setShowConfirmPasswordCriteria(false);
+                }
+
+                setShowConfirmPasswordCriteria(true);
+                setConfirmPassword(text);
+
+                const isMatch = text === password;
+                if (isMatch) {
+                  setConfirmPasswordIndicator(true);
+                  setSignUpFieldsValid((prev) => ({
+                    ...prev,
+                    validConfirmPassword: true,
+                  }));
+                  setShowConfirmPasswordCriteria(false);
+                } else {
+                  setConfirmPasswordIndicator(false);
+                  setSignUpFieldsValid((prev) => ({
+                    ...prev,
+                    validConfirmPassword: false,
+                  }));
+                }
+              }}
               secureTextEntry={!showConfirmPassword}
               className="flex-1 ml-3 text-white text-base"
             />
             <TouchableOpacity
+              className=" p-2"
               onPress={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               <MaterialIcons
@@ -130,7 +480,11 @@ const SignUpComponent = ({
         {/* Terms & Conditions Checkbox */}
         <TouchableOpacity
           className="flex-row items-center mb-6"
-          onPress={() => setAgreeToTerms(!agreeToTerms)}
+          onPress={() => {
+            const allValid = Object.values(signUpFieldsValid).every(Boolean);
+            if (allValid) setAgreeToTerms(!agreeToTerms);
+            else alert("Please fill all fields correctly before agreeing.");
+          }}
         >
           <View
             className={`w-5 h-5 rounded border-2 ${
@@ -154,6 +508,7 @@ const SignUpComponent = ({
             agreeToTerms ? "bg-[#234C6A]" : "bg-gray-600"
           }`}
           disabled={!agreeToTerms}
+          onPress={handleSignUp}
         >
           <Text className="text-white text-center text-base font-semibold">
             Create Account
