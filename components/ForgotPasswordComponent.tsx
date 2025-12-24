@@ -27,6 +27,7 @@ const ForgotPasswordComponent = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [resendTimer, setResendTimer] = useState<number>(0);
   const [canResend, setCanResend] = useState<boolean>(true);
+  const [otpToken, setOtpToken] = useState<string>("");
 
   const [passwordStrength, setPasswordStrength] = useState<{
     capital: boolean;
@@ -97,11 +98,12 @@ const ForgotPasswordComponent = ({
         "http://10.75.230.58:8080/recovery/verify-otp",
         {
           email,
-          code: verificationCode,
+          otp: verificationCode,
         }
       );
       console.log(response.data);
-      alert("Code verified successfully!");
+      alert(response.data.errorMessage);
+      setOtpToken(response.data.token);
       setStep(3);
     } catch (error: any) {
       console.error("Error verifying code:", error);
@@ -129,8 +131,8 @@ const ForgotPasswordComponent = ({
         "http://10.75.230.58:8080/recovery/reset-password",
         {
           email,
-          code: verificationCode,
           newPassword,
+          token: otpToken,
         }
       );
       console.log(response.data);

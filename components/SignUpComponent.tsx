@@ -1,4 +1,5 @@
 import { useAuth } from "@/auth/useAuth";
+import { getGoogleClientIds } from "@/config/google";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import LottieView from "lottie-react-native";
@@ -12,7 +13,6 @@ import {
   View,
 } from "react-native";
 import Loading from "../assets/animations/Loading....json";
-
 const SignUpComponent = ({
   signUpClick,
   fadeAnim,
@@ -23,6 +23,10 @@ const SignUpComponent = ({
   isLogged: any;
 }) => {
   const { login } = useAuth();
+
+  const { android, web } = getGoogleClientIds();
+  console.log("Google Client Ids:", { android, web });
+
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -70,6 +74,9 @@ const SignUpComponent = ({
 
   const [showConfirmPasswordCriteria, setShowConfirmPasswordCriteria] =
     useState(false);
+
+  console.log("ANDROID_CLIENT_ID:", process.env.ANDROID_CLIENT_ID);
+  console.log("WEB_CLIENT_ID:", process.env.WEB_CLIENT_ID);
 
   async function handleSignUp() {
     const allValid = Object.values(signUpFieldsValid).every(Boolean);
