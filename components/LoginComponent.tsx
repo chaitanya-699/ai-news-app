@@ -1,4 +1,5 @@
 import { useAuth } from "@/auth/useAuth";
+import { baseUrl } from "@/constants/requests";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import React, { useState } from "react";
@@ -13,13 +14,11 @@ import {
 const LoginComponent = ({
   signUpClick,
   fadeAnim,
-  isLogged,
   onForgotPassword,
   onForgotUsername,
 }: {
   signUpClick: any;
   fadeAnim: any;
-  isLogged: any;
   onForgotPassword?: any;
   onForgotUsername?: any;
 }) => {
@@ -30,15 +29,20 @@ const LoginComponent = ({
   const { login, setToken } = useAuth();
 
   const handleSignIn = async () => {
+    console.log("Attempting login with:", { username, password });
+    if (username.trim() === "" || password.trim() === "") {
+      alert("Username and password cannot be empty.");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://10.75.230.58:8080/auth/login", {
+      const response = await axios.post(`${baseUrl}/auth/login`, {
         username: username,
         password: password,
       });
       console.log(response.data);
-      login(response.data);
+      login({ token: response.data.token, user: response.data.data });
       setToken(response.data.token);
-      isLogged(true);
     } catch (error: Error | any) {
       // Handle login error
       console.log("Login error: ", error);

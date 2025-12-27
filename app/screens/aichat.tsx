@@ -1,5 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -182,233 +182,242 @@ const AiChat: React.FC = () => {
   ];
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={KEYBOARD_OFFSET}
-      className="flex-1 bg-black"
-    >
-      <View style={{ backgroundColor: bg }} className="flex-1 w-full">
-        {/* Background Image */}
-        <Image
-          source={Bg}
-          className="absolute top-1 left-1 w-[98%] h-[350px] rounded-3xl border-[0.5px] border-[#afafa76e]"
-          resizeMode="cover"
-        />
+    <>
+      <Stack.Screen
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+          headerShown: false,
+        }}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={KEYBOARD_OFFSET}
+        className="flex-1 bg-black"
+      >
+        <View style={{ backgroundColor: bg }} className="flex-1 w-full">
+          {/* Background Image */}
+          <Image
+            source={Bg}
+            className="absolute top-1 left-1 w-[98%] h-[350px] rounded-3xl border-[0.5px] border-[#afafa76e]"
+            resizeMode="cover"
+          />
 
-        {/* Header */}
-        <View className="absolute top-0 w-full h-24 flex-row justify-between items-end bg-transparent z-20">
-          <TouchableOpacity
-            onPress={handleBack}
-            accessibilityLabel="Go back"
-            accessibilityRole="button"
-            activeOpacity={0.7}
-          >
-            <View className="px-[9px] py-2 bg-[#000000aa] rounded-full ml-3">
-              <FontAwesome5 name="arrow-left" color="white" size={20} />
-            </View>
-          </TouchableOpacity>
-
-          <View className="flex flex-row items-center justify-center gap-3 mr-3">
+          {/* Header */}
+          <View className="absolute top-0 w-full h-24 flex-row justify-between items-end bg-transparent z-20">
             <TouchableOpacity
-              onPress={toggleBookmark}
-              accessibilityLabel={
-                isBookmarked ? "Remove bookmark" : "Add bookmark"
-              }
+              onPress={handleBack}
+              accessibilityLabel="Go back"
               accessibilityRole="button"
               activeOpacity={0.7}
             >
-              <View className="px-3 py-[8px] bg-[#000000aa] rounded-full">
-                <FontAwesome5
-                  name="bookmark"
-                  solid={isBookmarked}
-                  color="white"
-                  size={20}
-                />
+              <View className="px-[9px] py-2 bg-[#000000aa] rounded-full ml-3">
+                <FontAwesome5 name="arrow-left" color="white" size={20} />
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              accessibilityLabel="Voice mode"
-              accessibilityRole="button"
-              activeOpacity={0.7}
-            >
-              <View className="px-[8px] py-[8px] bg-[#000000aa] rounded-full">
-                <FontAwesome5 name="headphones-alt" color="white" size={20} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleShare}
-              accessibilityLabel="Share conversation"
-              accessibilityRole="button"
-              activeOpacity={0.7}
-            >
-              <View className="px-[9px] py-2 rounded-full bg-[#000000aa]">
-                <FontAwesome5 name="share-alt" color="white" size={20} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              accessibilityLabel="More options"
-              accessibilityRole="button"
-              activeOpacity={0.7}
-            >
-              <View className="px-4 py-2 bg-[#000000aa] rounded-full">
-                <FontAwesome5 name="ellipsis-v" color="white" size={20} />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Scrollable Content */}
-        <ScrollView
-          ref={scrollRef}
-          className="flex-1 w-full"
-          contentContainerStyle={{ paddingTop: 354, paddingBottom: 100 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View className="flex-1 w-full bg-black">
-            <View
-              className="px-3 pt-4"
-              style={{
-                backgroundColor: bg,
-              }}
-            >
-              <Text className="text-[33px] font-normal text-white mb-1 leading-tight">
-                Lorem ipsum dolor sit jasj jha, amet consectetur adipisicing
-                elit.
-              </Text>
-
-              <Text
-                className="text-[17px] font-light text-white my-2"
-                numberOfLines={isExpanded ? undefined : 6}
+            <View className="flex flex-row items-center justify-center gap-3 mr-3">
+              <TouchableOpacity
+                onPress={toggleBookmark}
+                accessibilityLabel={
+                  isBookmarked ? "Remove bookmark" : "Add bookmark"
+                }
+                accessibilityRole="button"
+                activeOpacity={0.7}
               >
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto
-                quasi reprehenderit omnis. Molestias atque autem a quo? Maxime
-                fugiat eveniet, saepe praesentium corrupti laborum, accusantium
-                consequuntur blanditiis id error accusamus. Magni saepe optio
-                numquam quidem exercitationem quia quam quis repellat eaque
-                dignissimos. Culpa eos mollitia a perspiciatis corporis quam
-                omnis magni doloribus magnam praesentium corrupti laborum,
-                accusantium
-                {!isExpanded && " . . ."}
-              </Text>
-
-              <TouchableOpacity onPress={toggleExpanded} className="mb-2">
-                <Text className="text-[15px] font-normal text-white/70">
-                  {isExpanded ? "Show less" : "Read more"}
-                </Text>
+                <View className="px-3 py-[8px] bg-[#000000aa] rounded-full">
+                  <FontAwesome5
+                    name="bookmark"
+                    solid={isBookmarked}
+                    color="white"
+                    size={20}
+                  />
+                </View>
               </TouchableOpacity>
 
-              {/* Suggestion Chips */}
-              {messages.length === 0 && (
-                <ScrollView
-                  horizontal
-                  className="flex flex-row mb-4"
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {suggestions.map((suggestion, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handleSuggestionPress(suggestion)}
-                      activeOpacity={0.7}
-                    >
-                      <Text className="text-[15px] font-normal text-white px-3 py-1 mr-2 my-1 border-[0.5px] border-[#afafa76e] rounded-2xl">
-                        {suggestion}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              )}
+              <TouchableOpacity
+                accessibilityLabel="Voice mode"
+                accessibilityRole="button"
+                activeOpacity={0.7}
+              >
+                <View className="px-[8px] py-[8px] bg-[#000000aa] rounded-full">
+                  <FontAwesome5 name="headphones-alt" color="white" size={20} />
+                </View>
+              </TouchableOpacity>
 
-              {/* Chat Messages */}
-              <View className="flex flex-col gap-3 mt-4">
-                {messages.map((msg) => (
-                  <View
-                    key={msg.id}
-                    className={`flex flex-row ${
-                      msg.isUser ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <View
-                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                        msg.isUser
-                          ? "bg-white/10 border-[0.5px] border-[#afafa76e]"
-                          : "bg-white/5 border-[0.5px] border-[#afafa76e]"
-                      }`}
-                    >
-                      <Text className="text-[16px] text-white font-normal">
-                        {msg.text}
-                      </Text>
-                      <Text className="text-[11px] text-white/40 mt-1">
-                        {msg.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
+              <TouchableOpacity
+                onPress={handleShare}
+                accessibilityLabel="Share conversation"
+                accessibilityRole="button"
+                activeOpacity={0.7}
+              >
+                <View className="px-[9px] py-2 rounded-full bg-[#000000aa]">
+                  <FontAwesome5 name="share-alt" color="white" size={20} />
+                </View>
+              </TouchableOpacity>
 
-                {/* Typing Indicator */}
-                {isTyping && (
-                  <View className="flex flex-row justify-start">
-                    <View className="bg-white/5 border-[0.5px] border-[#afafa76e] px-4 py-3 rounded-2xl">
-                      <Text className="text-[16px] text-white/70">
-                        AI is typing...
-                      </Text>
-                    </View>
-                  </View>
-                )}
-              </View>
+              <TouchableOpacity
+                accessibilityLabel="More options"
+                accessibilityRole="button"
+                activeOpacity={0.7}
+              >
+                <View className="px-4 py-2 bg-[#000000aa] rounded-full">
+                  <FontAwesome5 name="ellipsis-v" color="white" size={20} />
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
 
-        {/* Input Area */}
-        <View
-          className="absolute bottom-0 w-full bg-transparent z-10 items-center justify-center"
-          style={{
-            paddingBottom:
-              keyboardHeight > 0 ? keyboardHeight - KEYBOARD_OFFSET : 0,
-          }}
-        >
-          <View className="w-full p-2 rounded-3xl">
-            <TextInput
-              ref={inputRef}
-              className="w-[85%] min-h-[55px] max-h-[120px] bg-[#28282b] text-[17px] font-light text-white px-5 py-3 rounded-3xl border-[0.5px] border-[#afafa76e]"
-              placeholder="ask ai"
-              placeholderTextColor="white"
-              multiline
-              autoCorrect
-              autoCapitalize="sentences"
-              maxLength={MAX_MESSAGE_LENGTH}
-              value={message}
-              onChangeText={setMessage}
-              onSubmitEditing={sendMessage}
-              blurOnSubmit={false}
-            />
-            <TouchableOpacity
-              className="absolute right-2 top-[10px] bg-[#28282b] p-4 rounded-full border-[0.5px] border-[#afafa76e]"
-              onPress={sendMessage}
-              disabled={!message.trim()}
-              accessibilityLabel="Send message"
-              accessibilityRole="button"
-            >
-              <FontAwesome5
-                name="paper-plane"
-                color={message.trim() ? "white" : "#666"}
-                size={22}
+          {/* Scrollable Content */}
+          <ScrollView
+            ref={scrollRef}
+            className="flex-1 w-full"
+            contentContainerStyle={{ paddingTop: 354, paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View className="flex-1 w-full bg-black">
+              <View
+                className="px-3 pt-4"
+                style={{
+                  backgroundColor: bg,
+                }}
+              >
+                <Text className="text-[33px] font-normal text-white mb-1 leading-tight">
+                  Lorem ipsum dolor sit jasj jha, amet consectetur adipisicing
+                  elit.
+                </Text>
+
+                <Text
+                  className="text-[17px] font-light text-white my-2"
+                  numberOfLines={isExpanded ? undefined : 6}
+                >
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Iusto quasi reprehenderit omnis. Molestias atque autem a quo?
+                  Maxime fugiat eveniet, saepe praesentium corrupti laborum,
+                  accusantium consequuntur blanditiis id error accusamus. Magni
+                  saepe optio numquam quidem exercitationem quia quam quis
+                  repellat eaque dignissimos. Culpa eos mollitia a perspiciatis
+                  corporis quam omnis magni doloribus magnam praesentium
+                  corrupti laborum, accusantium
+                  {!isExpanded && " . . ."}
+                </Text>
+
+                <TouchableOpacity onPress={toggleExpanded} className="mb-2">
+                  <Text className="text-[15px] font-normal text-white/70">
+                    {isExpanded ? "Show less" : "Read more"}
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Suggestion Chips */}
+                {messages.length === 0 && (
+                  <ScrollView
+                    horizontal
+                    className="flex flex-row mb-4"
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {suggestions.map((suggestion, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => handleSuggestionPress(suggestion)}
+                        activeOpacity={0.7}
+                      >
+                        <Text className="text-[15px] font-normal text-white px-3 py-1 mr-2 my-1 border-[0.5px] border-[#afafa76e] rounded-2xl">
+                          {suggestion}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                )}
+
+                {/* Chat Messages */}
+                <View className="flex flex-col gap-3 mt-4">
+                  {messages.map((msg) => (
+                    <View
+                      key={msg.id}
+                      className={`flex flex-row ${
+                        msg.isUser ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <View
+                        className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+                          msg.isUser
+                            ? "bg-white/10 border-[0.5px] border-[#afafa76e]"
+                            : "bg-white/5 border-[0.5px] border-[#afafa76e]"
+                        }`}
+                      >
+                        <Text className="text-[16px] text-white font-normal">
+                          {msg.text}
+                        </Text>
+                        <Text className="text-[11px] text-white/40 mt-1">
+                          {msg.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+
+                  {/* Typing Indicator */}
+                  {isTyping && (
+                    <View className="flex flex-row justify-start">
+                      <View className="bg-white/5 border-[0.5px] border-[#afafa76e] px-4 py-3 rounded-2xl">
+                        <Text className="text-[16px] text-white/70">
+                          AI is typing...
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* Input Area */}
+          <View
+            className="absolute bottom-0 w-full bg-transparent z-10 items-center justify-center"
+            style={{
+              paddingBottom:
+                keyboardHeight > 0 ? keyboardHeight - KEYBOARD_OFFSET : 0,
+            }}
+          >
+            <View className="w-full p-2 rounded-3xl">
+              <TextInput
+                ref={inputRef}
+                className="w-[85%] min-h-[55px] max-h-[120px] bg-[#28282b] text-[17px] font-light text-white px-5 py-3 rounded-3xl border-[0.5px] border-[#afafa76e]"
+                placeholder="ask ai"
+                placeholderTextColor="white"
+                multiline
+                autoCorrect
+                autoCapitalize="sentences"
+                maxLength={MAX_MESSAGE_LENGTH}
+                value={message}
+                onChangeText={setMessage}
+                onSubmitEditing={sendMessage}
+                blurOnSubmit={false}
               />
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="absolute right-2 top-[10px] bg-[#28282b] p-4 rounded-full border-[0.5px] border-[#afafa76e]"
+                onPress={sendMessage}
+                disabled={!message.trim()}
+                accessibilityLabel="Send message"
+                accessibilityRole="button"
+              >
+                <FontAwesome5
+                  name="paper-plane"
+                  color={message.trim() ? "white" : "#666"}
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

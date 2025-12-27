@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602302519162",
+    "project_id": "news-d0f94",
+    "storage_bucket": "news-d0f94.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602302519162:android:83021965829b2b518b68c3",
+        "android_client_info": {
+          "package_name": "com.chaitanya.news24"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDejqls6Q6TV8m7AtpY6mhRKciOlBgUXx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

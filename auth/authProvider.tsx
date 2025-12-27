@@ -18,11 +18,10 @@ export const AuthProvider: any = ({ children }: any) => {
     loadToken();
   }, []);
 
-  const login = async (loginResponse: any) => {
-    const { token, user } = loginResponse;
+  const login = async ({ token, user }: { token: string; user: User }) => {
     setUser(user);
+    console.log("user : ", user);
     setToken(token);
-
     await SecureStore.setItemAsync("token", token);
   };
 
@@ -32,7 +31,9 @@ export const AuthProvider: any = ({ children }: any) => {
     await SecureStore.deleteItemAsync("token");
   };
   return (
-    <AuthContext.Provider value={{ user, token, setToken, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ user, token, setToken, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

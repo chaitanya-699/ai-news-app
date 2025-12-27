@@ -1,5 +1,6 @@
+import { useGoogleAuth } from "@/auth/googleAuthProvider";
 import { useAuth } from "@/auth/useAuth";
-import { getGoogleClientIds } from "@/config/google";
+import { baseUrl } from "@/constants/requests";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import LottieView from "lottie-react-native";
@@ -13,20 +14,15 @@ import {
   View,
 } from "react-native";
 import Loading from "../assets/animations/Loading....json";
+
 const SignUpComponent = ({
   signUpClick,
   fadeAnim,
-  isLogged,
 }: {
   signUpClick: any;
   fadeAnim: any;
-  isLogged: any;
 }) => {
   const { login } = useAuth();
-
-  const { android, web } = getGoogleClientIds();
-  console.log("Google Client Ids:", { android, web });
-
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -67,16 +63,13 @@ const SignUpComponent = ({
     validPassword: false,
     validConfirmPassword: false,
   });
-
   const [confirmPasswordIndicator, setConfirmPasswordIndicator] = useState<
     boolean | null
   >(null);
-
   const [showConfirmPasswordCriteria, setShowConfirmPasswordCriteria] =
     useState(false);
 
-  console.log("ANDROID_CLIENT_ID:", process.env.ANDROID_CLIENT_ID);
-  console.log("WEB_CLIENT_ID:", process.env.WEB_CLIENT_ID);
+  const { handleGoogleSignUp, googleLoading } = useGoogleAuth();
 
   async function handleSignUp() {
     const allValid = Object.values(signUpFieldsValid).every(Boolean);
@@ -85,20 +78,16 @@ const SignUpComponent = ({
       return;
     }
     try {
-      const response = await axios.post(
-        "http://10.75.230.58:8080/auth/signup",
-        {
-          username,
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${baseUrl}/auth/signup`, {
+        username,
+        email,
+        password,
+      });
 
       login({
         token: response.data.token,
         user: response.data.data,
       });
-      isLogged(true);
     } catch (error: any) {
       console.error("Error signing up:", error.response.data.message);
       alert(`Error signing up: ${error.response.data.message}`);
@@ -530,11 +519,25 @@ const SignUpComponent = ({
         </View>
 
         {/* Google Sign Up */}
-        <TouchableOpacity className="w-full flex-row items-center justify-center bg-white/10 rounded-2xl py-4 border border-white/20 mb-4">
+        <TouchableOpacity
+          className="w-full flex-row items-center justify-center bg-white/10 rounded-2xl  h-[50px] border border-white/20 mb-4"
+          onPress={handleGoogleSignUp}
+          disabled={googleLoading}
+        >
           <FontAwesome name="google" size={20} color="white" />
-          <Text className="text-white text-base font-medium ml-3">
-            Sign Up with Google
-          </Text>
+
+          {googleLoading ? (
+            <LottieView
+              source={Loading}
+              autoPlay
+              loop
+              style={{ width: 40, height: 40, padding: 0, margin: 0 }}
+            />
+          ) : (
+            <Text className="text-white text-base font-medium ml-3">
+              Sign Up with Google
+            </Text>
+          )}
         </TouchableOpacity>
 
         {/* Login Link */}

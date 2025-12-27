@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 
+import { baseUrl } from "@/constants/requests";
+
 const ForgotPasswordComponent = ({
   onBack,
   fadeAnim,
@@ -68,7 +70,7 @@ const ForgotPasswordComponent = ({
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://10.75.230.58:8080/recovery/forgot-password",
+        `${baseUrl}/recovery/forgot-password`,
         { email }
       );
       console.log(response.data);
@@ -95,7 +97,7 @@ const ForgotPasswordComponent = ({
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://10.75.230.58:8080/recovery/verify-otp",
+        `${baseUrl}/recovery/verify-otp`,
         {
           email,
           otp: verificationCode,
@@ -128,7 +130,7 @@ const ForgotPasswordComponent = ({
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://10.75.230.58:8080/recovery/reset-password",
+        `${baseUrl}/recovery/reset-password`,
         {
           email,
           newPassword,
@@ -166,7 +168,7 @@ const ForgotPasswordComponent = ({
 
     setLoading(true);
     try {
-      await axios.post("http://10.75.230.58:8080/recovery/forgot-password", {
+      await axios.post(`${baseUrl}/recovery/forgot-password`, {
         email,
       });
       alert("Verification code resent to your email!");

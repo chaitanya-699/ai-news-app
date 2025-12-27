@@ -11,9 +11,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "nativewind-env.d.ts"
-, "app/splash.tsx", "auth/authProvider.tsx"  ]
+    "nativewind-env.d.ts",
+    "app/splash.tsx",
+    "auth/authProvider.tsx"
+  ]
 }
-

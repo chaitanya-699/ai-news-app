@@ -77,14 +77,14 @@ interface TrendingCardProps {
 }
 
 export interface TabBarItems {
-    focused: boolean;
-    iconName: any;
-    size: number;
-    tabName: string;
-  }
+  focused: boolean;
+  iconName: any;
+  size: number;
+  tabName: string;
+}
 
 export interface User {
   id: number;
-  fullName: string;
+  username: string;
   email: string;
 }

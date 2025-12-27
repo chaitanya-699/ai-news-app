@@ -1,8 +1,9 @@
+import { useAuth } from "@/auth/useAuth";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent";
 import ForgotUsernameComponent from "@/components/ForgotUsernameComponent";
 import LoginComponent from "@/components/LoginComponent";
 import SignUpComponent from "@/components/SignUpComponent";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   ImageBackground,
@@ -16,9 +17,14 @@ const Profile = () => {
   const [authView, setAuthView] = useState<
     "login" | "signup" | "forgotPassword" | "forgotUsername"
   >("login");
-  const [isLogged, setIsLogged] = useState<boolean | null>(false);
   const fadeAnimate = useRef(new Animated.Value(1)).current;
+  const { user } = useAuth();
 
+  useEffect(() => {
+    if (user != null) {
+    }
+  }, [user]);
+  
   const toggleAuthComponents: any = (view: "login" | "signup") => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
@@ -90,7 +96,6 @@ const Profile = () => {
           <LoginComponent
             signUpClick={() => toggleAuthComponents("signup")}
             fadeAnim={fadeAnimate}
-            isLogged={setIsLogged}
             onForgotPassword={handleForgotPassword}
             onForgotUsername={handleForgotUsername}
           />
@@ -100,7 +105,6 @@ const Profile = () => {
           <SignUpComponent
             signUpClick={() => toggleAuthComponents("login")}
             fadeAnim={fadeAnimate}
-            isLogged={setIsLogged}
           />
         );
       case "forgotPassword":
@@ -137,7 +141,7 @@ const Profile = () => {
         style={styles.container}
         className="items-center justify-center"
       >
-        {isLogged ? <ProfileComponent /> : <IsLoggedComponent />}
+        {user != null ? <ProfileComponent /> : <IsLoggedComponent />}
       </ImageBackground>
     </Animated.View>
   );
