@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import Card from "./Card";
-import { CardItem, DATA, newsCardColors } from "./Data";
+import { CardItem, NEWS_DATA } from "./Data";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -25,11 +25,6 @@ const CardContainer = () => {
   const scrollBeginY = useRef<number>(0);
   const isScrolling = useRef(false);
 
-  // Add colors to data
-  const DATA_WITH_COLORS = DATA.map((item, index) => ({
-    ...item,
-    color: newsCardColors[index % newsCardColors.length],
-  }));
 
   const onScrollBeginDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     scrollBeginY.current = e.nativeEvent.contentOffset.y;
@@ -45,10 +40,11 @@ const CardContainer = () => {
     // Determine direction: positive = swipe up (next), negative = swipe down (prev)
     let targetIndex = currentIndex;
 
-    if (Math.abs(diff) > 20) { // Minimum swipe threshold
+    if (Math.abs(diff) > 20) {
+      // Minimum swipe threshold
       if (diff > 0) {
         // Swiped up - go to next card
-        targetIndex = Math.min(currentIndex + 1, DATA_WITH_COLORS.length - 1);
+        targetIndex = Math.min(currentIndex + 1, NEWS_DATA.length - 1);
       } else {
         // Swiped down - go to previous card
         targetIndex = Math.max(currentIndex - 1, 0);
@@ -80,7 +76,7 @@ const CardContainer = () => {
 
     const opacity = scrollY.interpolate({
       inputRange,
-      outputRange: [0, 1, 0],
+      outputRange: [0.1, 1, 0.1],
       extrapolate: "clamp",
     });
 
@@ -94,7 +90,7 @@ const CardContainer = () => {
           },
         ]}
       >
-        <Card color={item.color} />
+        <Card imageUrl={item.imageUrl} source={item.source} title={item.title}  summary={item.summary} time={item.time} />
       </Animated.View>
     );
   };
@@ -103,34 +99,29 @@ const CardContainer = () => {
     <View style={styles.container}>
       <Animated.FlatList
         ref={flatListRef}
-        data={DATA_WITH_COLORS}
+        data={NEWS_DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
-
         // Disable automatic snapping - we control it manually
         pagingEnabled={false}
         bounces={false}
         scrollEnabled={true}
-
         // Smooth animations
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true }
         )}
         scrollEventThrottle={16}
-
         // Manual control for one-card-per-swipe
         onScrollBeginDrag={onScrollBeginDrag}
         onScrollEndDrag={onScrollEndDrag}
-
         // Performance optimizations
         removeClippedSubviews={true}
         maxToRenderPerBatch={2}
         windowSize={5}
         initialNumToRender={3}
-
         // Important: helps with scrollToIndex
         getItemLayout={(data, index) => ({
           length: ITEM_SIZE,

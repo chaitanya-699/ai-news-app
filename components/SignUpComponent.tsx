@@ -525,7 +525,6 @@ const SignUpComponent = ({
           disabled={googleLoading}
         >
           <FontAwesome name="google" size={20} color="white" />
-
           {googleLoading ? (
             <LottieView
               source={Loading}

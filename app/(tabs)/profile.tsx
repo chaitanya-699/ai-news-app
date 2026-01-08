@@ -24,7 +24,7 @@ const Profile = () => {
     if (user != null) {
     }
   }, [user]);
-  
+
   const toggleAuthComponents: any = (view: "login" | "signup") => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
@@ -145,11 +145,12 @@ const Profile = () => {
       </ImageBackground>
     </Animated.View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1a1a2e",
   },
 });
+
 export default Profile;

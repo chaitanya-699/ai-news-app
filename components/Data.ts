@@ -1,73 +1,13 @@
 export interface CardItem {
   id: string;
+  source: string;
   title: string;
-  color: string;
-  subtitle: string;
+  time: string;
+  imageUrl: string;
+  summary: string;
 }
 
-export const DATA: CardItem[] = [
-  { id: "1", title: "Card 1", color: "#FF6B6B", subtitle: "Item 1" },
-  { id: "2", title: "Card 2", color: "#4ECDC4", subtitle: "Item 2" },
-  { id: "3", title: "Card 3", color: "#45B7D1", subtitle: "Item 3" },
-  { id: "4", title: "Card 4", color: "#FFA07A", subtitle: "Item 4" },
-  { id: "5", title: "Card 5", color: "#98D8C8", subtitle: "Item 5" },
-  { id: "6", title: "Card 6", color: "#F7DC6F", subtitle: "Item 6" },
 
-  { id: "7", title: "Card 7", color: "#FF9F1C", subtitle: "Item 7" },
-  { id: "8", title: "Card 8", color: "#2EC4B6", subtitle: "Item 8" },
-  { id: "9", title: "Card 9", color: "#E76F51", subtitle: "Item 9" },
-  { id: "10", title: "Card 10", color: "#F4A261", subtitle: "Item 10" },
-  { id: "11", title: "Card 11", color: "#2A9D8F", subtitle: "Item 11" },
-  { id: "12", title: "Card 12", color: "#E9C46A", subtitle: "Item 12" },
-
-  { id: "13", title: "Card 13", color: "#F4E285", subtitle: "Item 13" },
-  { id: "14", title: "Card 14", color: "#A8DADC", subtitle: "Item 14" },
-  { id: "15", title: "Card 15", color: "#457B9D", subtitle: "Item 15" },
-  { id: "16", title: "Card 16", color: "#1D3557", subtitle: "Item 16" },
-
-  { id: "17", title: "Card 17", color: "#F3722C", subtitle: "Item 17" },
-  { id: "18", title: "Card 18", color: "#F8961E", subtitle: "Item 18" },
-  { id: "19", title: "Card 19", color: "#F9844A", subtitle: "Item 19" },
-  { id: "20", title: "Card 20", color: "#43AA8B", subtitle: "Item 20" },
-
-  { id: "21", title: "Card 21", color: "#90BE6D", subtitle: "Item 21" },
-  { id: "22", title: "Card 22", color: "#577590", subtitle: "Item 22" },
-  { id: "23", title: "Card 23", color: "#E63946", subtitle: "Item 23" },
-  { id: "24", title: "Card 24", color: "#F1FAEE", subtitle: "Item 24" },
-
-  { id: "25", title: "Card 25", color: "#A4A5FF", subtitle: "Item 25" },
-  { id: "26", title: "Card 26", color: "#B388EB", subtitle: "Item 26" },
-  { id: "27", title: "Card 27", color: "#FFB4A2", subtitle: "Item 27" },
-  { id: "28", title: "Card 28", color: "#FFC8DD", subtitle: "Item 28" },
-
-  { id: "29", title: "Card 29", color: "#BDE0FE", subtitle: "Item 29" },
-  { id: "30", title: "Card 30", color: "#A2D2FF", subtitle: "Item 30" },
-  { id: "31", title: "Card 31", color: "#FFCAD4", subtitle: "Item 31" },
-  { id: "32", title: "Card 32", color: "#CDB4DB", subtitle: "Item 32" },
-
-  { id: "33", title: "Card 33", color: "#D8E2DC", subtitle: "Item 33" },
-  { id: "34", title: "Card 34", color: "#FFE5D9", subtitle: "Item 34" },
-  { id: "35", title: "Card 35", color: "#FEC89A", subtitle: "Item 35" },
-  { id: "36", title: "Card 36", color: "#F8AFA6", subtitle: "Item 36" },
-
-  { id: "37", title: "Card 37", color: "#B5E48C", subtitle: "Item 37" },
-  { id: "38", title: "Card 38", color: "#99D98C", subtitle: "Item 38" },
-  { id: "39", title: "Card 39", color: "#76C893", subtitle: "Item 39" },
-  { id: "40", title: "Card 40", color: "#52B69A", subtitle: "Item 40" },
-
-  { id: "41", title: "Card 41", color: "#34A0A4", subtitle: "Item 41" },
-  { id: "42", title: "Card 42", color: "#168AAD", subtitle: "Item 42" },
-  { id: "43", title: "Card 43", color: "#1A759F", subtitle: "Item 43" },
-  { id: "44", title: "Card 44", color: "#184E77", subtitle: "Item 44" },
-
-  { id: "45", title: "Card 45", color: "#FFC300", subtitle: "Item 45" },
-  { id: "46", title: "Card 46", color: "#FF5733", subtitle: "Item 46" },
-  { id: "47", title: "Card 47", color: "#C70039", subtitle: "Item 47" },
-  { id: "48", title: "Card 48", color: "#900C3F", subtitle: "Item 48" },
-
-  { id: "49", title: "Card 49", color: "#DAF7A6", subtitle: "Item 49" },
-  { id: "50", title: "Card 50", color: "#6BFFB8", subtitle: "Item 50" },
-];
 
 export const CATEGORIES: string[] = [
   "For You",
@@ -79,92 +19,44 @@ export const CATEGORIES: string[] = [
 ];
 
 export const newsCardColors: string[] = [
-  // your existing ones -----------------------------
-  "rgba(95, 155, 187, 0.9)",
-  "rgba(122, 173, 186, 0.9)",
-  "rgba(106, 188, 106, 0.9)",
-  "rgba(143, 201, 180, 0.9)",
-  "rgba(204, 204, 153, 0.9)",
-  "rgba(204, 194, 153, 0.9)",
-  "rgba(204, 158, 147, 0.9)",
-  "rgba(186, 130, 140, 0.9)",
-  "rgba(174, 113, 174, 0.9)",
-  "rgba(180, 180, 204, 0.9)",
-  "rgba(185, 199, 216, 0.9)",
-  "rgba(165, 212, 212, 0.9)",
-  "rgba(191, 166, 181, 0.9)",
-  "rgba(200, 195, 175, 0.9)",
-  "rgba(204, 189, 158, 0.9)",
-  "rgba(176, 190, 200, 0.9)",
-  "rgba(170, 209, 209, 0.9)",
-  "rgba(180, 206, 180, 0.9)",
-  "rgba(205, 195, 175, 0.9)",
-  "rgba(195, 190, 175, 0.9)",
-  "rgba(208, 198, 183, 0.9)",
-  "rgba(192, 192, 210, 0.9)",
-  "rgba(204, 180, 190, 0.9)",
-  "rgba(196, 196, 158, 0.9)",
-  "rgba(195, 225, 212, 0.9)",
-  "rgba(182, 225, 215, 0.9)",
-  "rgba(200, 200, 200, 0.9)",
-  "rgba(200, 185, 158, 0.9)",
-  "rgba(200, 200, 180, 0.9)",
-  "rgba(168, 216, 205, 0.9)",
-  "rgba(204, 180, 204, 0.9)",
-  "rgba(185, 212, 190, 0.9)",
-  "rgba(180, 212, 200, 0.9)",
-  "rgba(200, 192, 170, 0.9)",
-  "rgba(195, 175, 210, 0.9)",
-  "rgba(210,140,140,0.9)",
-  "rgba(180,110,110,0.9)",
-  "rgba(220,120,130,0.9)",
-  "rgba(200,95,95,0.9)",
-  "rgba(170,80,80,0.9)",
-  "rgba(220,160,120,0.9)",
-  "rgba(210,150,110,0.9)",
-  "rgba(200,140,100,0.9)",
-  "rgba(230,170,130,0.9)",
-  "rgba(190,120,90,0.9)",
-  "rgba(230,220,140,0.9)",
-  "rgba(215,205,120,0.9)",
-  "rgba(200,190,110,0.9)",
-  "rgba(240,225,150,0.9)",
-  "rgba(180,170,90,0.9)",
-  "rgba(125,185,125,0.9)",
-  "rgba(105,165,125,0.9)",
-  "rgba(95,150,105,0.9)",
-  "rgba(135,200,145,0.9)",
-  "rgba(85,140,95,0.9)",
-  "rgba(120,200,200,0.9)",
-  "rgba(100,185,185,0.9)",
-  "rgba(85,165,165,0.9)",
-  "rgba(140,215,210,0.9)",
-  "rgba(70,150,150,0.9)",
-  "rgba(115,155,205,0.9)",
-  "rgba(95,135,185,0.9)",
-  "rgba(85,120,170,0.9)",
-  "rgba(140,170,215,0.9)",
-  "rgba(70,110,160,0.9)",
-  "rgba(145,120,200,0.9)",
-  "rgba(130,105,185,0.9)",
-  "rgba(115,90,170,0.9)",
-  "rgba(165,140,215,0.9)",
-  "rgba(100,75,155,0.9)",
-  "rgba(210,150,195,0.9)",
-  "rgba(190,130,175,0.9)",
-  "rgba(170,110,155,0.9)",
-  "rgba(225,165,205,0.9)",
-  "rgba(150,90,135,0.9)",
-  "rgba(160,130,105,0.9)",
-  "rgba(140,110,90,0.9)",
-  "rgba(120,95,80,0.9)",
-  "rgba(180,145,120,0.9)",
-  "rgba(100,80,65,0.9)",
-  "rgba(160,160,160,0.9)",
-  "rgba(140,140,140,0.9)",
-  "rgba(120,120,120,0.9)",
-  "rgba(180,180,180,0.9)",
-  "rgba(100,100,100,0.9)",
+  // Electric Blues
+  "rgba(0, 153, 255, 0.7)",
+  "rgba(0, 195, 255, 0.7)",
+  "rgba(64, 156, 255, 0.7)",
+  "rgba(80, 180, 255, 0.7)",
+  "rgba(120, 210, 255, 0.7)",
+
+  // Neon Cyan / Aqua
+  "rgba(0, 255, 230, 0.7)",
+  "rgba(64, 255, 240, 0.7)",
+  "rgba(90, 240, 230, 0.7)",
+  "rgba(120, 255, 245, 0.7)",
+
+  // Neon Greens
+  "rgba(0, 255, 120, 0.7)",
+  "rgba(70, 255, 150, 0.7)",
+  "rgba(120, 255, 180, 0.7)",
+
+  // Neon Yellows
+  "rgba(255, 230, 0, 0.7)",
+  "rgba(255, 200, 60, 0.7)",
+
+  // Neon Oranges
+  "rgba(255, 140, 0, 0.7)",
+  "rgba(255, 170, 60, 0.7)",
+
+  // Neon Reds / Pinks
+  "rgba(255, 70, 90, 0.7)",
+  "rgba(255, 110, 160, 0.7)",
+
+  // Neon Purples
+  "rgba(160, 90, 255, 0.7)",
+  "rgba(190, 120, 255, 0.7)",
+  "rgba(220, 140, 255, 0.7)",
+
+  // Neon Gradient-friendly Soft Whites
+  "rgba(200, 220, 255, 0.7)",
+  "rgba(210, 240, 255, 0.7)",
 ];
 
 export const newsCardColors2: string[] = [
@@ -217,5 +109,108 @@ export const newsCardColors2: string[] = [
   "rgba(199, 0, 57,0.8)",
   "rgba(144, 12, 63,0.8)",
   "rgba(218, 247, 166,0.8)",
+];
+
+export const NEWS_DATA: CardItem[] = [
+  {
+    id: "1",
+    source: "TechCrunch",
+    title: "Apple unveils its first fully on-device AI model",
+    time: "2h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Apple introduces a new on-device AI model that performs real-time reasoning and privacy-preserving computation without cloud dependency.",
+  },
+  {
+    id: "2",
+    source: "The Verge",
+    title: "OpenAI releases next-gen multimodal model",
+    time: "3h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "OpenAI unveils its latest multimodal AI capable of advanced reasoning across text, vision, audio, and code generation.",
+  },
+  {
+    id: "3",
+    source: "Wired",
+    title: "Quantum computing enters consumer space",
+    time: "5h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Startups are launching consumer-grade quantum hardware and simulators for developers worldwide.",
+  },
+  {
+    id: "4",
+    source: "MIT Tech Review",
+    title: "Neural chips promise 100x faster AI inference",
+    time: "6h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Next-generation neuromorphic chips reduce power usage while dramatically increasing inference speeds.",
+  },
+  {
+    id: "5",
+    source: "Forbes",
+    title: "AI copilots are replacing traditional IDE workflows",
+    time: "7h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581091215367-59ab6f4b1c79?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Developers increasingly rely on AI copilots to generate, test, and deploy code autonomously.",
+  },
+  {
+    id: "6",
+    source: "Bloomberg",
+    title: "NVIDIA’s new GPU breaks performance records",
+    time: "8h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1612832021036-0c6aa87f9c85?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "NVIDIA launches a new AI-optimized GPU delivering unprecedented training throughput.",
+  },
+  {
+    id: "7",
+    source: "Reuters",
+    title: "India launches national AI cloud infrastructure",
+    time: "10h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "The Indian government announces a sovereign AI cloud platform for startups and research institutes.",
+  },
+  {
+    id: "8",
+    source: "ZDNet",
+    title: "AI powered cybersecurity detects threats instantly",
+    time: "11h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "New AI-based security engines are stopping cyberattacks in under 30 milliseconds.",
+  },
+  {
+    id: "9",
+    source: "Fast Company",
+    title: "Humanoid robots enter commercial workplaces",
+    time: "12h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581091012184-5c4c9fba6b26?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Companies begin deploying humanoid robots for logistics, customer service, and manufacturing.",
+  },
+  {
+    id: "10",
+    source: "Nature",
+    title: "AI model predicts diseases years before diagnosis",
+    time: "14h ago",
+    imageUrl:
+      "https://images.unsplash.com/photo-1580281657521-0f6bbefb7c2d?auto=format&fit=crop&w=1200&q=80",
+    summary:
+      "Researchers develop predictive AI systems capable of detecting diseases long before symptoms appear.",
+  },
 ];
 

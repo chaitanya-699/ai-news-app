@@ -1,182 +1,71 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import LottieView from "lottie-react-native";
-import React, { useState } from "react";
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
-import Bg from "../assets/images/bg.jpg";
-import Logo from "../assets/images/logo.jpg";
+import React from "react";
+import { Image, Pressable, Text, View } from "react-native";
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const Card = React.memo(({ color }: any) => {
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-    };
-  });
-
-  const handlePressIn = () => {
-    scale.value = withSpring(0.99, { damping: 45 });
+const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
+  const icons: any = ["bookmark", "headphones", "chat", "more-vert"];
+  const handlePress = () => {
+    router.push("/screens/aichat");
   };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 45 });
-  };
-
-  const [bookmark, setBookmark] = useState<string>("");
 
   return (
-    <AnimatedPressable
-      style={[animatedStyle, { backgroundColor: color, elevation: 5 }]}
-      className="flex flex-1 w-[94%] h-full rounded-3xl
-      overflow-visible self-center mt-9 shadow-lg shadow-white/50 border-[0.2px] border-[rgba(255,255,255,0.1)]"
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
+    <View className=" w-[97%] h-[92%] bg-[#3a93ae]  flex flex-1 flex-col justify-between rounded-[9px] shadow-lg mt-7 p-[2px]">
       <Pressable
-        className="flex-1 justify-start bg-inherit"
-        onPress={() =>
-          router.push({ pathname: "/screens/aichat", params: { color } })
-        }
+        className="flex-2 w-full h-[380px] rounded-[9px] overflow-hidden"
+        onPress={handlePress}
       >
-        <Image source={Bg} className="w-[100%] h-[60%] rounded-t-3xl" />
-        <View className="absolute top-[42%] w-full max-h-[105px] px-1">
-          <Text
-            className="text-3xl font-medium text-white py-0 px-1 bg-[rgba(0,0,0,0.1)]"
-            numberOfLines={3}
-            ellipsizeMode="tail"
-          >
-            Lorem ipsum cars sitamet consectetur adipisicing elit.consectetur
-            cing elit.consectetur adipisicing elit.
-          </Text>
-        </View>
-        <View className="self-start flex flex-row justify-center items-center gap-1">
-          <View className=" flex flex-row justify-between items-center gap-1 py-[2px] bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-[12px] px-1 my-2 ml-2 ">
-            <Image
-              source={Logo}
-              className="w-4 h-4 rounded-full border-[0.5px] border-[#4fc3f7]"
-            ></Image>
-            <Text className="text-[#4fc3f7] font-semibold text-[12px]">
-              Chaitanyapotti
-            </Text>
-          </View>
+        <View className="absolute top-0 z-10 w-full h-[380px] bg-[rgba(0,0,0,0.5)] ">
 
-          <Text className="text-[14px] font-semibold text-white">2h ago.</Text>
-          <Pressable>
-            <MaterialCommunityIcons
-              name="open-in-new"
-              color="white"
-              className="font-semibold pr-3"
-              size={13}
-            />
-          </Pressable>
         </View>
-        {/* ANOTHER TEXT */}
-        <View className="w-full">
+        <Image
+          source={{ uri: imageUrl }}
+          className="w-full h-full rounded-[9px] ml-[0.2px]"
+        />
+
+        <View className="absolute bottom-4 left-3 z-20 max-w-[90%] max-h-[150px] bg-transparent p-1 ">
           <Text
-            className="text-white px-3 text-[18px]"
-            numberOfLines={8}
+            className="text-white text-3xl font-medium "
+            numberOfLines={4}
             ellipsizeMode="tail"
           >
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam ex
-            iusto libero totam tenetur sed. Molestias sapiente atque
-            exercitationem incidunt deserunt, cupiditate perferendis officiis
-            distinctio sint rerum fugit vel quis.libero totam tenetur sed.
-            Molestias sapiente atque exercitationem incidunt deserunt,
-            cupiditate perferendis officiis distinctio sint rerum fugit vel
-            quis.rendis officiis distinctio sint rerum fugit vel quis.
+            {title}
           </Text>
+        </View>
+        <View className="absolute top-3 left-3 z-10 flex flex-row items-center justify-center rounded-full px-2 py-[0.5px] bg-[rgba(99,97,97,0.98)]  ">
+          <Text className="text-[15px] text-white">{source}</Text>
+          <Text className="text-[13px] text-white"> • </Text>
+          <Text className="text-[12px] text-white">{time}</Text>
+          <MaterialIcons
+            name="open-in-new"
+            size={13}
+            color="white"
+            className="pl-1"
+          />
         </View>
       </Pressable>
-      <View className="flex flex-row justify-start items-center px-2 pt-2 m-1 border-t-[0.5px] border-white gap-2">
-        <TouchableOpacity
-          className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] "
-          onPress={() => {
-            if (bookmark === "success") {
-              setBookmark("");
-              return;
-            }
-
-            setBookmark("loading");
-            console.log("calling api");
-            setTimeout(() => {
-              setBookmark("success");
-            }, 3000);
-          }}
+      <Pressable
+        className="w-full "
+        onPress={handlePress}
+      >
+        <Text
+          className="text-[19px] font-medium p-3 text-justify text-[rgb(255,255,255,0.8)]"
+          numberOfLines={5}
         >
-          {bookmark === "loading" ? (
-            <View className="">
-              <LottieView
-                source={require("../assets/animations/Loading....json")}
-                autoPlay
-                loop
-                style={{ width: 31, height: 31 }}
-                colorFilters={[
-                  {
-                    keypath: "**",
-                    color: "#4fc3f7", // your highlight color
-                  },
-                ]}
-              />
-            </View>
-          ) : bookmark === "success" ? (
-            <MaterialCommunityIcons
-              name="bookmark"
-              size={13}
-              color="#4fc3f7"
-              solid={true}
-              className="p-2 pl-3"
-            />
-          ) : (
-            <MaterialCommunityIcons
-              name="bookmark"
-              size={13}
-              color="#4fc3f7"
-              solid={true}
-              className="p-2 pl-3"
-            />
-          )}
-          <Text className="text-[#4fc3f7] font-semibold pr-2">Saved</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
-          <MaterialCommunityIcons
-            name="comment"
-            size={13}
-            color="#4fc3f7"
-            solid={false}
-            className="p-2 pl-3"
-          />
-          <Text className="text-[#4fc3f7] font-semibold pr-2">comments</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
-          <MaterialCommunityIcons
-            name="waveform"
-            size={13}
-            color="#4fc3f7"
-            solid={false}
-            className="p-2 pl-3"
-          />
-          <Text className="text-[#4fc3f7] font-semibold pr-2">Listen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex flex-row items-center justify-start bg-[#1a1f35] border-[0.5px] border-[#4fc3f7] rounded-2xl  h-[30px] gap-0">
-          <MaterialCommunityIcons
-            name="share"
-            size={13}
-            color="#4fc3f7"
-            solid={false}
-            className="p-2 pl-3"
-          />
-          <Text className="text-[#4fc3f7] font-semibold pr-2">Share</Text>
-        </TouchableOpacity>
+          {summary}
+        </Text>
+      </Pressable>
+      <View className="flex flex-row justify-between items-center border-t-[0.5px] border-white">
+        {icons.map((icon: any) => (
+          <Pressable
+            key={icon}
+            className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
+          >
+            <MaterialIcons name={icon} size={24} color="white" />
+          </Pressable>
+        ))}
       </View>
-    </AnimatedPressable>
+    </View>
   );
 });
 
