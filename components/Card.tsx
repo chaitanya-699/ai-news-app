@@ -1,12 +1,29 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import LottieView from "lottie-react-native";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import Loading from "../assets/animations/Loading....json";
 
 const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
-  const icons: any = ["bookmark", "headphones", "chat", "more-vert"];
   const handlePress = () => {
     router.push("/screens/aichat");
+  };
+  const [saveLoading, setSaveLoading] = React.useState(false);
+  const [saved, setSaved] = React.useState(false);
+
+  const handleSavePress = () => {
+    setSaveLoading(true);
+    // Simulate a save action with a timeout
+    setTimeout(() => {
+      setSaveLoading(false);
+
+      if (saved) {
+        setSaved(false);
+      } else {
+        setSaved(true);
+      }
+    }, 1000);
   };
 
   return (
@@ -15,9 +32,7 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
         className="flex-2 w-full h-[380px] rounded-[9px] overflow-hidden"
         onPress={handlePress}
       >
-        <View className="absolute top-0 z-10 w-full h-[380px] bg-[rgba(0,0,0,0.5)] ">
-
-        </View>
+        <View className="absolute top-0 z-10 w-full h-[380px] bg-[rgba(0,0,0,0.5)] "></View>
         <Image
           source={{ uri: imageUrl }}
           className="w-full h-full rounded-[9px] ml-[0.2px]"
@@ -44,10 +59,7 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
           />
         </View>
       </Pressable>
-      <Pressable
-        className="w-full "
-        onPress={handlePress}
-      >
+      <Pressable className="w-full " onPress={handlePress}>
         <Text
           className="text-[19px] font-medium p-3 text-justify text-[rgb(255,255,255,0.8)]"
           numberOfLines={5}
@@ -56,14 +68,35 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
         </Text>
       </Pressable>
       <View className="flex flex-row justify-between items-center border-t-[0.5px] border-white">
-        {icons.map((icon: any) => (
-          <Pressable
-            key={icon}
-            className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
-          >
-            <MaterialIcons name={icon} size={24} color="white" />
-          </Pressable>
-        ))}
+        <Pressable
+          className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
+          onPress={handleSavePress}
+        >
+          {!saveLoading ? (
+            saved ? (
+              <MaterialIcons name="bookmark-added" size={24} color="white" />
+            ) : (
+              <MaterialIcons name="bookmark" size={24} color="white" />
+            )
+          ) : (
+            <LottieView
+              source={Loading}
+              autoPlay
+              loop
+              style={{ width: 50, height: 50 }}
+            />
+          )}
+        </Pressable>
+
+        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
+          <MaterialIcons name="headphones" size={24} color="white" />
+        </Pressable>
+        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
+          <MaterialIcons name="chat" size={24} color="white" />
+        </Pressable>
+        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
+          <MaterialIcons name="share" size={24} color="white" />
+        </Pressable>
       </View>
     </View>
   );
