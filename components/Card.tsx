@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Alert, Image, Pressable, Share, Text, View } from "react-native";
 import Loading from "../assets/animations/Loading....json";
 import Sound from "../assets/animations/Sound wave.json";
 import ChatBottomSheet from "./ChatBottomSheet";
@@ -18,6 +18,31 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
   const [audioSaved, setAudioSaved] = React.useState(false);
 
   const [chatVisible, setChatVisible] = React.useState(false);
+
+  const handleSharePress = async () => {
+    try {
+      const result = await Share.share({
+        message: `📰 ${title}\n\n${summary}\n\nSource: ${source}\n\nShared from AI News App`,
+        title: title,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared with activity type of result.activityType
+          console.log("Shared with activity type:", result.activityType);
+        } else {
+          // Shared
+          console.log("Content shared successfully");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed
+        console.log("Share dismissed");
+      }
+    } catch (error: any) {
+      Alert.alert("Error", "Failed to share the news article");
+      console.error("Share error:", error.message);
+    }
+  };
 
   const handleSavePress = () => {
     setSaveLoading(true);
@@ -136,7 +161,10 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
         >
           <MaterialIcons name="chat" size={24} color="white" />
         </Pressable>
-        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
+        <Pressable
+          className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
+          onPress={handleSharePress}
+        >
           <MaterialIcons name="share" size={24} color="white" />
         </Pressable>
       </View>

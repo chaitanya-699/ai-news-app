@@ -1,14 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useEffect, useRef } from "react";
+import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
+  Keyboard,
   Modal,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
+import { useAuth } from "../auth/useAuth";
 
 interface ChatBottomSheetProps {
   visible: boolean;
@@ -92,6 +96,39 @@ const ChatBottomSheet: React.FC<ChatBottomSheetProps> = ({
   onClose,
 }) => {
   const slideAnim = useRef(new Animated.Value(SHEET_HEIGHT)).current;
+  const { user } = useAuth();
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState(MOCK_COMMENTS);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handlePostComment = () => {
+    if (!commentText.trim() || !user) return;
+
+    const newComment = {
+      id: comments.length + 1,
+      username: user.username || user.email?.split("@")[0] || "User",
+      location: "Your Location",
+      avatar: "👤",
+      comment: commentText.trim(),
+      time: "Just now",
+      likes: 0,
+    };
+
+    setComments([newComment, ...comments]);
+    setCommentText("");
+    Keyboard.dismiss();
+
+    // Scroll to top to show the new comment
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (visible) {
+      setComments(MOCK_COMMENTS);
+    }
+  }, [visible]);
 
   useEffect(() => {
     Animated.timing(slideAnim, {
@@ -130,7 +167,7 @@ const ChatBottomSheet: React.FC<ChatBottomSheetProps> = ({
                   Comments
                 </Text>
                 <Text className="text-gray-400 text-xs">
-                  {MOCK_COMMENTS.length} global reactions
+                  {comments.length} global reactions
                 </Text>
               </View>
             </View>
@@ -142,13 +179,75 @@ const ChatBottomSheet: React.FC<ChatBottomSheetProps> = ({
             </Pressable>
           </View>
 
+          {/* Comment Input - Only show if user is logged in */}
+          {user && (
+            <View className="px-4 py-3 border-b border-gray-700 bg-gray-800/40">
+              <View className="flex flex-row items-center gap-3">
+                <View className="bg-cyan-600 w-10 h-10 rounded-full items-center justify-center">
+                  <Text className="text-white text-lg">
+                    {user.username?.[0]?.toUpperCase() ||
+                      user.email?.[0]?.toUpperCase() ||
+                      "👤"}
+                  </Text>
+                </View>
+                <View className="flex-1 flex flex-row items-center bg-gray-700 rounded-full px-4 py-2">
+                  <TextInput
+                    className="flex-1 text-white text-base"
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#9ca3af"
+                    value={commentText}
+                    onChangeText={setCommentText}
+                    multiline
+                    maxLength={500}
+                  />
+                  <Pressable
+                    onPress={handlePostComment}
+                    disabled={!commentText.trim()}
+                    className={`ml-2 ${
+                      commentText.trim() ? "opacity-100" : "opacity-40"
+                    }`}
+                  >
+                    <MaterialIcons
+                      name="send"
+                      size={20}
+                      color={commentText.trim() ? "#06b6d4" : "#9ca3af"}
+                    />
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* Login prompt if user is not logged in */}
+          {!user && (
+            <View className="px-4 py-3 border-b border-gray-700 bg-gray-800/40">
+              <View className="flex flex-row items-center justify-between">
+                <Text className="text-gray-400 text-sm">
+                  Sign in to join the conversation
+                </Text>
+                <Pressable
+                  className="bg-cyan-600 px-4 py-2 rounded-full"
+                  onPress={() => {
+                    onClose();
+                    router.push("/(tabs)/profile");
+                  }}
+                >
+                  <Text className="text-white font-semibold text-sm">
+                    Sign In
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+
           {/* Scrollable Content */}
           <ScrollView
+            ref={scrollViewRef}
             className="px-4 pt-3"
             contentContainerStyle={{ paddingBottom: 50 }}
             showsVerticalScrollIndicator={false}
           >
-            {MOCK_COMMENTS.map((comment) => (
+            {comments.map((comment) => (
               <View
                 key={comment.id}
                 className="bg-gray-800/60 mb-4 rounded-xl p-4"
