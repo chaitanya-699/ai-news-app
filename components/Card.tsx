@@ -4,6 +4,8 @@ import LottieView from "lottie-react-native";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import Loading from "../assets/animations/Loading....json";
+import Sound from "../assets/animations/Sound wave.json";
+import ChatBottomSheet from "./ChatBottomSheet";
 
 const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
   const handlePress = () => {
@@ -11,6 +13,11 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
   };
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
+
+  const [audioLoading, setAudioLoading] = React.useState(false);
+  const [audioSaved, setAudioSaved] = React.useState(false);
+
+  const [chatVisible, setChatVisible] = React.useState(false);
 
   const handleSavePress = () => {
     setSaveLoading(true);
@@ -22,6 +29,19 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
         setSaved(false);
       } else {
         setSaved(true);
+      }
+    }, 1000);
+  };
+
+  const handleAudioPress = () => {
+    setAudioLoading(true);
+    // Simulate a save action with a timeout
+    setTimeout(() => {
+      setAudioLoading(false);
+      if (audioSaved) {
+        setAudioSaved(false);
+      } else {
+        setAudioSaved(true);
       }
     }, 1000);
   };
@@ -88,16 +108,43 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
           )}
         </Pressable>
 
-        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
-          <MaterialIcons name="headphones" size={24} color="white" />
+        <Pressable
+          className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
+          onPress={handleAudioPress}
+        >
+          {audioLoading ? (
+            <LottieView
+              source={Loading}
+              autoPlay
+              loop
+              style={{ width: 50, height: 50 }}
+            />
+          ) : audioSaved ? (
+            <LottieView
+              source={Sound}
+              autoPlay
+              loop
+              style={{ width: 40, height: 40 }}
+            />
+          ) : (
+            <MaterialIcons name="headphones" size={24} color="white" />
+          )}
         </Pressable>
-        <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
+        <Pressable
+          className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6"
+          onPress={() => setChatVisible(true)}
+        >
           <MaterialIcons name="chat" size={24} color="white" />
         </Pressable>
         <Pressable className="bg-[rgb(255,255,255,0.2)] w-14 h-14 rounded-[100%] items-center justify-center m-2 mx-6">
           <MaterialIcons name="share" size={24} color="white" />
         </Pressable>
       </View>
+
+      <ChatBottomSheet
+        visible={chatVisible}
+        onClose={() => setChatVisible(false)}
+      />
     </View>
   );
 });
