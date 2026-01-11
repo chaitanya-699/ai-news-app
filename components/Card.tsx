@@ -11,6 +11,7 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
   const handlePress = () => {
     router.push("/screens/aichat");
   };
+
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
 
@@ -72,12 +73,24 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
   };
 
   return (
-    <View className=" w-[97%] h-[92%] bg-[#3a93ae]  flex flex-1 flex-col justify-between rounded-[9px] shadow-lg mt-7 p-[2px]">
+    <View className=" w-[97%] h-[100%] bg-[#3a93ae]  flex flex-1 flex-col justify-between rounded-[9px] shadow-lg mt-7 p-[2px]">
+      <View className="absolute top-3 left-3 z-30 flex flex-row items-center justify-center rounded-full px-2 py-[0.5px] bg-[rgba(99,97,97,0.98)]  ">
+        <Text className="text-[15px] text-white">{source}</Text>
+        <Text className="text-[13px] text-white"> • </Text>
+        <Text className="text-[12px] text-white">{time}</Text>
+        <MaterialIcons
+          name="open-in-new"
+          size={13}
+          color="white"
+          className="pl-1"
+        />
+      </View>
+
       <Pressable
-        className="flex-2 w-full h-[380px] rounded-[9px] overflow-hidden"
+        className="flex-2 w-full h-[350px] rounded-[9px] overflow-hidden"
         onPress={handlePress}
       >
-        <View className="absolute top-0 z-10 w-full h-[380px] bg-[rgba(0,0,0,0.5)] "></View>
+        <View className="absolute top-0 z-10 w-full h-[350px] bg-[rgba(0,0,0,0.5)] "></View>
         <Image
           source={{ uri: imageUrl }}
           className="w-full h-full rounded-[9px] ml-[0.2px]"
@@ -91,17 +104,6 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
           >
             {title}
           </Text>
-        </View>
-        <View className="absolute top-3 left-3 z-10 flex flex-row items-center justify-center rounded-full px-2 py-[0.5px] bg-[rgba(99,97,97,0.98)]  ">
-          <Text className="text-[15px] text-white">{source}</Text>
-          <Text className="text-[13px] text-white"> • </Text>
-          <Text className="text-[12px] text-white">{time}</Text>
-          <MaterialIcons
-            name="open-in-new"
-            size={13}
-            color="white"
-            className="pl-1"
-          />
         </View>
       </Pressable>
       <Pressable className="w-full " onPress={handlePress}>
@@ -126,6 +128,7 @@ const Card = React.memo(({ imageUrl, source, title, summary, time }: any) => {
           ) : (
             <LottieView
               source={Loading}
+              direction={-1}
               autoPlay
               loop
               style={{ width: 50, height: 50 }}

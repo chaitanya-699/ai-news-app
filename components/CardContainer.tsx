@@ -14,7 +14,7 @@ import { CardItem, NEWS_DATA } from "./Data";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Configuration
-const CARD_HEIGHT = 590;
+const CARD_HEIGHT = 550;
 const SPACING = 20;
 const ITEM_SIZE = CARD_HEIGHT + SPACING;
 
@@ -24,7 +24,6 @@ const CardContainer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollBeginY = useRef<number>(0);
   const isScrolling = useRef(false);
-
 
   const onScrollBeginDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     scrollBeginY.current = e.nativeEvent.contentOffset.y;
@@ -70,13 +69,13 @@ const CardContainer = () => {
 
     const scale = scrollY.interpolate({
       inputRange,
-      outputRange: [0.97, 1, 0.97],
+      outputRange: [0.95, 1, 0.95],
       extrapolate: "clamp",
     });
 
     const opacity = scrollY.interpolate({
       inputRange,
-      outputRange: [0.1, 1, 0.1],
+      outputRange: [0.05, 1, 0.05],
       extrapolate: "clamp",
     });
 
@@ -90,7 +89,13 @@ const CardContainer = () => {
           },
         ]}
       >
-        <Card imageUrl={item.imageUrl} source={item.source} title={item.title}  summary={item.summary} time={item.time} />
+        <Card
+          imageUrl={item.imageUrl}
+          source={item.source}
+          title={item.title}
+          summary={item.summary}
+          time={item.time}
+        />
       </Animated.View>
     );
   };
